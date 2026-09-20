@@ -1,12 +1,43 @@
 {
-  "title": "คลังความรู้ แผนกฟื้นฟูสมรรถภาพ",
+  "title": "คลังความรู้",
   "shortName": "คลังความรู้ฟื้นฟูฯ",
-  "org": "โรงพยาบาล",
-  "dept": "แผนกฟื้นฟูสมรรถภาพ",
-  "description": "ความรู้และคำแนะนำสำหรับผู้ป่วยและญาติ จากแผนกฟื้นฟูสมรรถภาพ",
-  "homeHeading": "หัวข้อความรู้",
-  "themeColor": "#0f766e",
+  "subtitle": "บทความดี ๆ เพื่อสุขภาพของคุณ",
+  "org": "รพ.ค่ายสุริยพงษ์",
+  "dept": "แผนกฟื้นฟู",
+  "description": "ความรู้และคำแนะนำสำหรับผู้ป่วยและญาติ จากแผนกฟื้นฟูสมรรถภาพ รพ.ค่ายสุริยพงษ์",
+  "bannerTitle": "เรียนรู้ เข้าใจ ดูแลตัวเอง",
+  "bannerSubtitle": "ความรู้เพื่อการฟื้นฟูสุขภาพของคุณ",
+  "bannerImage": "/assets/img/book.png",
+  "searchPlaceholder": "ค้นหาความรู้และท่าบริหาร",
+  "sectionHeading": "เลือกหมวดความรู้",
+  "themeColor": "#169fa5",
   "logo": "",
   "ogImage": "",
-  "contact": ""
+  "contact": "",
+  "categories": [
+    {
+      "slug": "bone",
+      "title": "ระบบกระดูก",
+      "desc": "กระดูก ข้อต่อ และกล้ามเนื้อ",
+      "image": "/assets/img/knee.png"
+    },
+    {
+      "slug": "neuro",
+      "title": "ระบบประสาท",
+      "desc": "สมอง เส้นประสาท และการเคลื่อนไหว",
+      "image": "/assets/img/brain.png"
+    },
+    {
+      "slug": "elderly",
+      "title": "ผู้สูงอายุ",
+      "desc": "การทรงตัวและการดูแลสุขภาพ",
+      "image": "/assets/img/elderly.png"
+    }
+  ],
+  "nav": [
+    { "label": "หน้าหลัก", "href": "/" },
+    { "label": "คลังความรู้", "href": "/", "active": true },
+    { "label": "บันทึกไว้", "href": "/saved.html" },
+    { "label": "ติดต่อ", "href": "/contact.html" }
+  ]
 }

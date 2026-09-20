@@ -1,7 +1,9 @@
 ---
 title: ท่าบริหารง่ายๆ ทำเองที่บ้าน
 summary: วันละ 10-15 นาที ทำได้ทุกวัน
-order: 3
+category: bone
+cover: /assets/img/knee.png
+order: 4
 ---
 
 ## ก่อนเริ่ม

@@ -1,7 +1,9 @@
 ---
 title: การใช้ไม้เท้าและอุปกรณ์ช่วยเดิน
 summary: เลือกให้เหมาะ ใช้ให้ถูก ลดการหกล้ม
-order: 2
+category: elderly
+cover: /assets/img/elderly.png
+order: 3
 ---
 
 ## เลือกไม้เท้าให้พอดีตัว

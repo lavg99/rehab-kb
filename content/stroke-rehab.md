@@ -1,7 +1,9 @@
 ---
 title: การฟื้นฟูหลังเป็นอัมพาตครึ่งซีก
 summary: สิ่งที่ผู้ป่วยและญาติควรรู้ในช่วงแรก
-order: 1
+category: neuro
+cover: /assets/img/brain.png
+order: 2
 ---
 
 ## ช่วงแรกสำคัญที่สุด
