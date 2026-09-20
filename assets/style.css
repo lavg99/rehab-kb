@@ -97,39 +97,58 @@ a:hover { text-decoration: underline; }
 }
 
 /* ---------- หัวหน้า ---------- */
+/* Figma: ชื่อเรื่องเริ่ม y=20 คำบรรยาย y=57 (วัดจากขอบบนจอ) */
 .topbar {
+  position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  padding: calc(14px + env(safe-area-inset-top)) var(--pad) 10px;
+  gap: 0;
+  padding: calc(24px + env(safe-area-inset-top)) var(--pad) 10px;
   width: 100%;
   max-width: var(--w);
   margin-inline: auto;
 }
 
+/* หน้าบทเรียน: แถบหัวพื้นฟ้าอ่อน สูง 66px ตาม Figma */
 .topbar-tint {
   background: var(--tint);
   width: 100%;
   padding-top: env(safe-area-inset-top);
 }
-.topbar-tint .topbar { padding-top: 10px; }
+.topbar-tint .topbar {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  min-height: 66px;
+  align-items: center;
+}
 
+/* Figma: ลูกศรลอยทับมุมซ้าย ไม่กินพื้นที่แถวหัว (หัวเรื่องจึงกึ่งกลางจอจริง)
+   ปุ่มกว้าง 44px เพื่อให้แตะง่าย แต่ตัวอักษร ‹ ต้องตกที่ x=16 ตาม Figma
+   จึงจัดตัวอักษรชิดซ้ายในปุ่มแล้วเว้นระยะใน 16px แทนการดันทั้งปุ่ม */
 .back-btn {
-  flex: none;
+  position: absolute;
+  left: 0;
+  top: calc(14px + env(safe-area-inset-top));
   width: 44px; height: 44px;
-  display: grid; place-items: center;
+  display: grid;
+  align-items: center;
+  justify-items: start;
+  padding-left: 16px;
   border: 0; background: none; cursor: pointer;
   color: var(--ink);
   font-size: 30px; line-height: 1;
-  padding: 0;
   border-radius: 10px;
   font-family: inherit;
   text-decoration: none;
+  z-index: 10;
 }
 .back-btn:hover { background: rgb(22 58 95 / .07); text-decoration: none; }
 
-.head-text { flex: 1; min-width: 0; text-align: center; }
-.head-text.left { text-align: left; padding-top: 6px; }
+/* Figma วาดหัวเรื่องเยื้างซ้ายจากกึ่งกลางจอ ~20px (ชื่อ) และ ~30px (คำบรรยาย)
+   ไม่ใช่กึ่งกลางเป๊ะ — ทำตามดีไซน์ด้วยการดันขวาเผื่อพื้นที่ปุ่มธีม 40px */
+.head-text { flex: 1; min-width: 0; text-align: center; padding-right: 40px; }
+/* หน้าบทเรียน: ชื่ออยู่ชิดซ้ายถัดจากลูกศร (Figma: ลูกศร x=16, ชื่อ x=50) */
+.head-text.left { text-align: left; padding-top: 4px; padding-left: 34px; padding-right: 0; }
 
 .head-title {
   margin: 0;
@@ -140,15 +159,21 @@ a:hover { text-decoration: underline; }
 }
 .head-title.sm { font-size: 22px; }
 
+/* Figma วาดคำบรรยายเยื้องซ้ายกว่าชื่อเรื่องอีก 10px (ชื่อ x=117 · คำบรรยาย x=77 ยาวกว่า) */
 .head-sub {
   margin: 2px 0 0;
+  margin-right: 20px;
   font-size: 14px;
   font-weight: 400;
   color: var(--ink-soft);
 }
 
+/* ปุ่มสลับโหมดมืด — ไม่มีในดีไซน์ Figma
+   วางลอยทับมุมขวาบน ไม่กินพื้นที่ในแถวหัวเรื่อง หัวข้อจะได้อยู่กึ่งกลางจริงตาม ref */
 .theme-btn {
-  flex: none;
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  right: var(--pad);
   width: 44px; height: 44px;
   display: grid; place-items: center;
   border: 0; cursor: pointer; padding: 0;
@@ -156,16 +181,18 @@ a:hover { text-decoration: underline; }
   background: rgb(22 58 95 / .07);
   color: var(--ink);
   font-family: inherit;
+  z-index: 10;
 }
 .theme-btn:hover { background: rgb(22 58 95 / .14); }
 
 /* ---------- แบนเนอร์ ---------- */
+/* Figma: แบนเนอร์ y=98 — หัวหน้าดันลง 12px แล้ว จึงลดระยะบนลง 12 ให้คงที่ */
 .banner {
   position: relative;
   background: var(--tint);
   border-radius: 20px;
-  padding: 19px 20px 20px;
-  margin-top: 20px;
+  padding: 19px 12px 20px;
+  margin-top: 8px;
   min-height: 130px;
   overflow: hidden;
 }
@@ -186,20 +213,25 @@ a:hover { text-decoration: underline; }
   max-width: 62%;
 }
 
+/* ขนาด/ตำแหน่งรูปหนังสือ วัดจาก Figma: 77x77 ห่างขวา 19 ล่าง 7 */
 .banner-img {
   position: absolute;
-  right: 4px;
-  bottom: -4px;
-  width: 92px;
+  right: 19px;
+  bottom: 7px;
+  width: 77px;
+  height: 77px;
+  object-fit: contain;
   pointer-events: none;
   user-select: none;
 }
 
 /* ---------- ช่องค้นหา ---------- */
+/* Figma: กล่อง x=16 กว้าง 358 สูง 48 · ไอคอน+ข้อความรวมกันเริ่มที่ x=30 ยาว 173
+   ไอคอนแว่นเล็กและชิดข้อความมาก (ระยะห่าง 4px) */
 .search {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 3px;
   margin-top: 18px;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -209,7 +241,7 @@ a:hover { text-decoration: underline; }
   box-shadow: var(--shadow-soft);
 }
 
-.search svg { flex: none; color: var(--ink-soft); }
+.search svg { flex: none; width: 12px; height: 12px; color: var(--ink-soft); }
 
 .search input {
   flex: 1; min-width: 0;
@@ -219,11 +251,11 @@ a:hover { text-decoration: underline; }
   color: var(--ink);
   height: 100%;
 }
-.search input::placeholder { color: var(--ink-soft); }
+.search input::placeholder { color: var(--ink-soft); font-size: 15px; }
 
 /* ---------- หัวข้อหมวด ---------- */
 .section-h {
-  margin: 28px 0 10px;
+  margin: 20px 0 10px;
   font-size: 21px;
   font-weight: 700;
   color: var(--ink);
@@ -313,41 +345,51 @@ a:hover { text-decoration: underline; }
 
 .btn-primary { background: var(--brand); color: #fff; }
 .btn-primary:hover { filter: brightness(1.06); }
+.btn[disabled] { opacity: .55; cursor: not-allowed; }
+.btn[disabled]:hover { filter: none; }
 
 .btn-wide { grid-column: 1 / -1; }
 
 /* ---------- แถบเมนูล่าง ---------- */
+/* Figma: แถบสูง 64 ไม่มีเส้นคั่น พื้นขาว
+   ปุ่มที่เลือกเป็นแคปซูล 88x46 ตัวอักษรอยู่กึ่งกลางแนวตั้ง */
 .tabbar {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   z-index: 20;
   background: var(--surface);
-  border-top: 1px solid var(--line);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* Figma: ปุ่มไม่ได้วางกลางช่องเท่ากัน — วัดจากดีไซน์จริง
+   หน้าหลัก x=11 · คลังความรู้ x=108 · บันทึกไว้ x=205 · ติดต่อ x=302
+   = ระยะห่างเท่ากัน 97px เริ่มที่ 11 → ใช้ 4 ช่องเท่ากันแล้วจัดชิดซ้ายในช่อง */
 .tabbar-in {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 97px);
+  justify-content: start;
   align-items: center;
-  justify-content: space-around;
-  gap: 4px;
   height: var(--nav-h);
   width: 100%;
   max-width: var(--w);
   margin-inline: auto;
-  padding-inline: 8px;
+  padding-inline: 11px;
 }
 
+/* ปุ่มพอดีข้อความ ชิดซ้ายในช่องของตัวเอง
+   "คลังความรู้" กว้าง 60 + ขอบข้างละ 14 = แคปซูล 88px ตรงตามดีไซน์ */
 .tab {
   display: grid;
   place-items: center;
-  min-width: 68px;
+  justify-self: start;
   min-height: 46px;
-  padding: 0 12px;
+  margin-left: -14px;
+  padding: 0 14px;
   border-radius: var(--r-pill);
   font-size: 13px;
   color: var(--ink-soft);
   font-weight: 400;
+  white-space: nowrap;
 }
 .tab:hover { text-decoration: none; }
 
@@ -358,6 +400,7 @@ a:hover { text-decoration: underline; }
 }
 
 /* ---------- หน้าบทเรียน ---------- */
+/* Figma: breadcrumb y=84 (ห่างแถบหัว 18) · ชื่อ y=119 · คำบรรยาย y=164 · วิดีโอ y=203 */
 .crumb {
   margin: 18px 0 0;
   font-size: 13px;
@@ -366,7 +409,7 @@ a:hover { text-decoration: underline; }
 .crumb a { color: inherit; }
 
 .lesson-title {
-  margin: 12px 0 0;
+  margin: 11px 0 0;
   font-size: 26px;
   font-weight: 700;
   color: var(--ink);
@@ -410,11 +453,12 @@ a:hover { text-decoration: underline; }
   padding-left: 4px;
 }
 
-/* แท็บในหน้าบทเรียน */
+/* แท็บในหน้าบทเรียน
+   Figma: ไม่มีเส้นคั่นเต็มความกว้าง มีแค่ขีดสั้นใต้แท็บที่เลือก (กว้างครึ่งหนึ่ง หนา 3)
+   แท็บซ้ายและขวาแบ่งครึ่งช่องเท่ากัน */
 .tabs {
   display: flex;
   margin-top: 22px;
-  border-bottom: 1px solid var(--line);
 }
 
 .tab-btn {
@@ -427,7 +471,6 @@ a:hover { text-decoration: underline; }
   padding: 8px 4px 11px;
   cursor: pointer;
   border-bottom: 3px solid transparent;
-  margin-bottom: -1px;
   min-height: 44px;
 }
 .tab-btn[aria-selected="true"] {
@@ -439,17 +482,18 @@ a:hover { text-decoration: underline; }
 .tab-panel { padding-top: 16px; }
 .tab-panel[hidden] { display: none; }
 
-/* การ์ดขั้นตอน */
+/* การ์ดขั้นตอน
+   Figma: การ์ด 358x118 · เลข 30x30 ที่ x=28 · ข้อความเริ่ม x=68 · รูป 80x100 ชิดขวา x=282 */
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
 
 .step {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   background: var(--surface);
   border-radius: var(--r-card);
   box-shadow: var(--shadow-card);
-  padding: 20px 12px;
+  padding: 9px 12px;
   min-height: 118px;
 }
 
@@ -462,9 +506,16 @@ a:hover { text-decoration: underline; }
   display: grid; place-items: center;
   font-size: 16px;
   font-weight: 700;
+  align-self: flex-start;
+  margin-top: 16px;
 }
 
-.step-body { flex: 1; min-width: 0; }
+.step-body {
+  flex: 1;
+  min-width: 0;
+  align-self: flex-start;
+  margin-top: 12px;
+}
 
 .step-title {
   display: block;

@@ -208,7 +208,7 @@ const catCards = (SITE.categories || []).map(c => {
 }).join('\n');
 
 const homeBody = `<header class="topbar">
-  <span class="back-btn" aria-hidden="true"></span>
+  <span class="back-btn" aria-hidden="true">‹</span>
   <div class="head-text">
     <h1 class="head-title">${esc(SITE.title)}</h1>
     <p class="head-sub">${esc(SITE.subtitle)}</p>
@@ -297,7 +297,9 @@ ${p.steps.map(s => `    <li class="step">
     ${p.videoUrl ? `<a class="media-play" href="${esc(p.videoUrl)}" target="_blank" rel="noopener" aria-label="เล่นวิดีโอ"><span aria-hidden="true">▶</span></a>` : ''}
   </div>` : ''}
 
-  ${p.videoUrl ? `<div class="btn-row"><a class="btn btn-primary btn-wide" href="${esc(p.videoUrl)}" target="_blank" rel="noopener">▶ เริ่มดูวิดีโอ</a></div>` : ''}
+  ${p.video ? `<div class="btn-row">${p.videoUrl
+    ? `<a class="btn btn-primary btn-wide" href="${esc(p.videoUrl)}" target="_blank" rel="noopener">▶&nbsp; เริ่มดูวิดีโอ</a>`
+    : `<button type="button" class="btn btn-primary btn-wide" disabled title="ยังไม่ได้ใส่ลิงก์วิดีโอ">▶&nbsp; เริ่มดูวิดีโอ</button>`}</div>` : ''}
 
   ${tabsHtml}
 
