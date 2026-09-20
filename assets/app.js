@@ -2,6 +2,8 @@
 (() => {
   'use strict';
   const root = document.documentElement;
+  // โฟลเดอร์ที่เว็บอยู่บนโฮสต์ (ว่าง = อยู่ที่รากโดเมน)
+  const BASE = window.__BASE__ || '';
 
   /* ---------- สลับโหมดสว่าง–มืด ---------- */
   const THEME_KEY = 'rehab-kb-theme';
@@ -53,13 +55,13 @@
   document.querySelectorAll('[data-save]').forEach(btn => {
     const slug = btn.dataset.save;
     const sync = () => {
-      const on = readSaved().some(x => x.u === `/a/${slug}.html`);
+      const on = readSaved().some(x => x.u === `${BASE}/a/${slug}.html`);
       btn.textContent = on ? '✓ บันทึกแล้ว' : 'บันทึกไว้อ่าน';
       btn.classList.toggle('btn-primary', on);
     };
     sync();
     btn.addEventListener('click', () => {
-      const url = `/a/${slug}.html`;
+      const url = `${BASE}/a/${slug}.html`;
       const list = readSaved();
       const i = list.findIndex(x => x.u === url);
       if (i >= 0) list.splice(i, 1);
@@ -102,7 +104,7 @@
     const load = async () => {
       if (index) return index;
       try {
-        const r = await fetch('/search.json');
+        const r = await fetch(`${BASE}/search.json`);
         index = await r.json();
       } catch { index = []; }
       return index;

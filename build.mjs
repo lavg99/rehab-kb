@@ -10,6 +10,12 @@ const DIST = join(ROOT, 'dist');
 
 const SITE = JSON.parse(readFileSync(join(ROOT, 'site.json'), 'utf8'));
 
+// BASE = โฟลเดอร์ที่เว็บไปอยู่บนโฮสต์ เช่น GitHub Pages จะเป็น "/rehab-kb"
+// ตั้งผ่าน env ตอน build:  BASE=/rehab-kb node build.mjs
+// ถ้าเว็บอยู่ที่รากของโดเมน ไม่ต้องตั้ง
+const BASE = (process.env.BASE || '').replace(/\/+$/, '');
+const u = (path) => BASE + path;
+
 // ---------- helper ----------
 const esc = (s = '') => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -107,7 +113,7 @@ function tabbar(current = '/') {
     // ปุ่มที่ active ต้องมีตัวเดียว — ใช้ href ตรงกับหน้าปัจจุบัน
     // หน้าแรก/บทเรียน/หมวด ให้ไฮไลต์ "คลังความรู้" (ตัวที่ตั้ง active ไว้ใน site.json)
     const on = current === '/' ? !!n.active : n.href === current;
-    return `<a class="tab" href="${esc(n.href)}"${on ? ' aria-current="page"' : ''}>${esc(n.label)}</a>`;
+    return `<a class="tab" href="${esc(u(n.href))}"${on ? ' aria-current="page"' : ''}>${esc(n.label)}</a>`;
   }).join('\n      ');
   return `<nav class="tabbar" aria-label="เมนูหลัก">
     <div class="tabbar-in">
@@ -128,6 +134,7 @@ function layout({ title, desc, body, isHome = false, current = '/' }) {
 <title>${esc(pageTitle)}</title>
 <script>
 /* ตั้งธีมก่อนวาดหน้า กันภาพวาบ — ค่าตั้งต้นสว่าง */
+window.__BASE__=${JSON.stringify(BASE)};
 try{var t=localStorage.getItem('rehab-kb-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}
 </script>
 <meta name="description" content="${esc(desc || SITE.description)}">
@@ -135,19 +142,19 @@ try{var t=localStorage.getItem('rehab-kb-theme');if(t==='dark'||t==='light')docu
 <meta property="og:description" content="${esc(desc || SITE.description)}">
 <meta property="og:type" content="website">
 ${SITE.ogImage ? `<meta property="og:image" content="${esc(SITE.ogImage)}">` : ''}
-<link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="${u('/manifest.webmanifest')}">
+<link rel="icon" href="${u('/assets/icon.svg')}" type="image/svg+xml">
 <meta name="theme-color" content="${esc(SITE.themeColor)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="${u('/assets/style.css')}">
 </head>
 <body>
 <a class="skip" href="#main">ข้ามไปเนื้อหา</a>
 ${body}
 ${tabbar(current)}
-<script src="/assets/app.js"></script>
+<script src="${u('/assets/app.js')}"></script>
 </body>
 </html>`;
 }
@@ -187,10 +194,10 @@ const pages = files.map(f => {
 const catCards = (SITE.categories || []).map(c => {
   const n = pages.filter(p => p.category === c.slug).length;
   const first = pages.find(p => p.category === c.slug);
-  const href = n === 1 && first ? `/a/${first.slug}.html` : `/c/${c.slug}.html`;
+  const href = n === 1 && first ? u(`/a/${first.slug}.html`) : u(`/c/${c.slug}.html`);
   return `    <li>
       <a class="cat" href="${esc(href)}">
-        <img class="cat-img" src="${esc(c.image)}" alt="" loading="lazy" decoding="async" width="110" height="102">
+        <img class="cat-img" src="${esc(u(c.image))}" alt="" loading="lazy" decoding="async" width="110" height="102">
         <span class="cat-body">
           <span class="cat-title">${esc(c.title)}</span>
           <span class="cat-desc">${esc(c.desc)}</span>
@@ -213,7 +220,7 @@ const homeBody = `<header class="topbar">
   <section class="banner">
     <h2 class="banner-title">${esc(SITE.bannerTitle)}</h2>
     <p class="banner-sub">${esc(SITE.bannerSubtitle)}</p>
-    ${SITE.bannerImage ? `<img class="banner-img" src="${esc(SITE.bannerImage)}" alt="" loading="lazy" decoding="async">` : ''}
+    ${SITE.bannerImage ? `<img class="banner-img" src="${esc(u(SITE.bannerImage))}" alt="" loading="lazy" decoding="async">` : ''}
   </section>
 
   <form class="search" role="search" onsubmit="return false">
@@ -231,8 +238,8 @@ ${catCards || '    <li class="empty">ยังไม่มีหมวด</li>'}
   <p class="empty" id="searchEmpty" hidden>ไม่พบเนื้อหาที่ค้นหา</p>
 
   <div class="btn-row">
-    <a class="btn" href="/c/article.html">บทความ</a>
-    <a class="btn" href="/c/video.html">วิดีโอท่าบริหาร</a>
+    <a class="btn" href="${u('/c/article.html')}">บทความ</a>
+    <a class="btn" href="${u('/c/video.html')}">วิดีโอท่าบริหาร</a>
   </div>
 
   <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
@@ -245,7 +252,7 @@ mkdirSync(join(DIST, 'c'), { recursive: true });
 
 for (const p of pages) {
   const cat = (SITE.categories || []).find(c => c.slug === p.category);
-  const crumb = ['<a href="/">หน้าหลัก</a>', cat ? `<a href="/c/${cat.slug}.html">${esc(cat.title)}</a>` : '', esc(p.categoryTitle || p.title)]
+  const crumb = [`<a href="${u('/')}">หน้าหลัก</a>`, cat ? `<a href="${u(`/c/${cat.slug}.html`)}">${esc(cat.title)}</a>` : '', esc(p.categoryTitle || p.title)]
     .filter(Boolean).join(' › ');
 
   const stepsHtml = p.steps.length ? `<ul class="steps">
@@ -255,7 +262,7 @@ ${p.steps.map(s => `    <li class="step">
         <span class="step-title">${esc(s.title)}</span>
         ${s.desc ? `<span class="step-desc">${esc(s.desc)}</span>` : ''}
       </span>
-      ${s.img ? `<img class="step-img" src="${esc(s.img)}" alt="" loading="lazy" decoding="async" width="80" height="100">` : ''}
+      ${s.img ? `<img class="step-img" src="${esc(u(s.img))}" alt="" loading="lazy" decoding="async" width="80" height="100">` : ''}
     </li>`).join('\n')}
   </ul>` : '';
 
@@ -273,7 +280,7 @@ ${p.steps.map(s => `    <li class="step">
 
   const body = `<div class="topbar-tint">
   <header class="topbar">
-    <a class="back-btn" href="/" aria-label="ย้อนกลับ">‹</a>
+    <a class="back-btn" href="${u('/')}" aria-label="ย้อนกลับ">‹</a>
     <div class="head-text left">
       <h1 class="head-title sm">สื่อการสอน</h1>
     </div>
@@ -286,7 +293,7 @@ ${p.steps.map(s => `    <li class="step">
   ${p.summary ? `<p class="lesson-sub">${esc(p.summary)}</p>` : ''}
 
   ${p.video ? `<div class="media">
-    <img src="${esc(p.video)}" alt="" loading="lazy" decoding="async">
+    <img src="${esc(u(p.video))}" alt="" loading="lazy" decoding="async">
     ${p.videoUrl ? `<a class="media-play" href="${esc(p.videoUrl)}" target="_blank" rel="noopener" aria-label="เล่นวิดีโอ"><span aria-hidden="true">▶</span></a>` : ''}
   </div>` : ''}
 
@@ -300,7 +307,7 @@ ${p.info.map(t => `    <p>${esc(t)}</p>`).join('\n')}
 
   <div class="btn-row">
     <button type="button" class="btn" data-save="${esc(p.slug)}">บันทึกไว้อ่าน</button>
-    <a class="btn btn-primary" href="/contact.html">สอบถามแผนก</a>
+    <a class="btn btn-primary" href="${u('/contact.html')}">สอบถามแผนก</a>
   </div>
 
   <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
@@ -320,8 +327,8 @@ const groups = [
 
 for (const g of groups) {
   const items = g.list.map(p => `    <li>
-      <a class="cat" href="/a/${esc(p.slug)}.html">
-        ${p.cover ? `<img class="cat-img" src="${esc(p.cover)}" alt="" loading="lazy" decoding="async" width="110" height="102">` : ''}
+      <a class="cat" href="${u(`/a/${esc(p.slug)}.html`)}">
+        ${p.cover ? `<img class="cat-img" src="${esc(u(p.cover))}" alt="" loading="lazy" decoding="async" width="110" height="102">` : ''}
         <span class="cat-body">
           <span class="cat-title">${esc(p.title)}</span>
           ${p.summary ? `<span class="cat-desc">${esc(p.summary)}</span>` : ''}
@@ -332,13 +339,13 @@ for (const g of groups) {
 
   const body = `<div class="topbar-tint">
   <header class="topbar">
-    <a class="back-btn" href="/" aria-label="ย้อนกลับ">‹</a>
+    <a class="back-btn" href="${u('/')}" aria-label="ย้อนกลับ">‹</a>
     <div class="head-text left"><h1 class="head-title sm">${esc(g.title)}</h1></div>
   </header>
 </div>
 
 <main id="main" class="wrap">
-  <p class="crumb"><a href="/">หน้าหลัก</a> › ${esc(g.title)}</p>
+  <p class="crumb"><a href="${u('/')}">หน้าหลัก</a> › ${esc(g.title)}</p>
   <h2 class="lesson-title">${esc(g.title)}</h2>
   <p class="lesson-sub">${esc(g.desc)}</p>
   <ul class="cat-list" style="margin-top:20px">
@@ -355,12 +362,12 @@ writeFileSync(join(DIST, 'saved.html'), layout({
   title: 'บันทึกไว้', desc: 'เนื้อหาที่คุณบันทึกไว้อ่าน', current: '/saved.html',
   body: `<div class="topbar-tint">
   <header class="topbar">
-    <a class="back-btn" href="/" aria-label="ย้อนกลับ">‹</a>
+    <a class="back-btn" href="${u('/')}" aria-label="ย้อนกลับ">‹</a>
     <div class="head-text left"><h1 class="head-title sm">บันทึกไว้</h1></div>
   </header>
 </div>
 <main id="main" class="wrap">
-  <p class="crumb"><a href="/">หน้าหลัก</a> › บันทึกไว้</p>
+  <p class="crumb"><a href="${u('/')}">หน้าหลัก</a> › บันทึกไว้</p>
   <ul class="cat-list" id="savedList" style="margin-top:18px"></ul>
   <p class="empty" id="savedEmpty">ยังไม่มีเนื้อหาที่บันทึกไว้</p>
   <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
@@ -371,12 +378,12 @@ writeFileSync(join(DIST, 'contact.html'), layout({
   title: 'ติดต่อแผนก', desc: 'ติดต่อสอบถามแผนกฟื้นฟูสมรรถภาพ', current: '/contact.html',
   body: `<div class="topbar-tint">
   <header class="topbar">
-    <a class="back-btn" href="/" aria-label="ย้อนกลับ">‹</a>
+    <a class="back-btn" href="${u('/')}" aria-label="ย้อนกลับ">‹</a>
     <div class="head-text left"><h1 class="head-title sm">ติดต่อแผนก</h1></div>
   </header>
 </div>
 <main id="main" class="wrap">
-  <p class="crumb"><a href="/">หน้าหลัก</a> › ติดต่อ</p>
+  <p class="crumb"><a href="${u('/')}">หน้าหลัก</a> › ติดต่อ</p>
   <h2 class="lesson-title">${esc(SITE.dept)}</h2>
   <p class="lesson-sub">${esc(SITE.org)}</p>
   <div class="info" style="margin-top:20px">
@@ -389,16 +396,16 @@ writeFileSync(join(DIST, 'contact.html'), layout({
 
 // ---------- ดัชนีค้นหา ----------
 writeFileSync(join(DIST, 'search.json'), JSON.stringify(
-  pages.map(p => ({ t: p.title, s: p.summary, u: `/a/${p.slug}.html`, i: p.cover || '' })),
+  pages.map(p => ({ t: p.title, s: p.summary, u: u(`/a/${p.slug}.html`), i: p.cover ? u(p.cover) : '' })),
 ));
 
 // ---------- assets + manifest ----------
 cpSync(join(ROOT, 'assets'), join(DIST, 'assets'), { recursive: true });
 writeFileSync(join(DIST, 'manifest.webmanifest'), JSON.stringify({
   name: `${SITE.title} · ${SITE.org}`, short_name: SITE.shortName,
-  start_url: '/', display: 'standalone',
+  start_url: u('/') || '/', display: 'standalone',
   background_color: '#f0fafe', theme_color: SITE.themeColor,
-  icons: [{ src: '/assets/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
+  icons: [{ src: u('/assets/icon.svg'), sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
 }, null, 2));
 writeFileSync(join(DIST, '_headers'), `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n`);
 
