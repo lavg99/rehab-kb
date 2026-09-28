@@ -4,7 +4,7 @@ summary: ชานิ้วโป้ง ชี้ กลาง โดยเฉ�
 type: disease
 category: office
 icon: clean-hands
-order: 2
+order: 8
 youtube: 
 related:
 reviewer: 

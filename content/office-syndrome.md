@@ -1,5 +1,7 @@
 ---
-title: ออฟฟิศซินโดรม ปวดคอ บ่า ไหล่
+thumb: /assets/dz/office-syndrome.webp
+tagline: เรียนรู้เรื่องอาการจากการทำงาน
+title: ออฟฟิศซินโดรม
 summary: ปวดตึงคอบ่าไหล่จากการนั่งทำงานหน้าคอมพิวเตอร์นาน ๆ
 type: disease
 category: office

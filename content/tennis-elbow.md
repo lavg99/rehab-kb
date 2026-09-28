@@ -4,7 +4,7 @@ summary: ปวดข้อศอกด้านนอก เวลาบิด 
 type: disease
 category: office
 icon: arm
-order: 3
+order: 9
 youtube: 
 related:
 reviewer: 

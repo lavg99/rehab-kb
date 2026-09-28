@@ -76,7 +76,14 @@
       "slug": "office",
       "title": "วัยทำงาน",
       "desc": "ออฟฟิศซินโดรม ปวดคอ บ่า ไหล่ มือ",
-      "image": "/assets/cat3d/office.webp"
+      "image": "/assets/cat3d/office.webp",
+      "heroTitle": "ทำงานอย่างสบาย\nใส่ใจร่างกายทุกวัน",
+      "heroText": "ออฟฟิศซินโดรม\nคอ บ่า ไหล่ และมือ",
+      "heroImage": "/assets/hero/office.webp",
+      "mediaTitle": "สื่อการเรียนรู้",
+      "listTitle": "อาการและการดูแลในวัยทำงาน",
+      "listSize": 19,
+      "searchHint": "ค้นหาอาการหรือหัวข้อการดูแล"
     },
     {
       "slug": "child",
