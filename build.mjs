@@ -233,7 +233,6 @@ const catCards = (SITE.categories || []).map(c => {
 const nCat = (SITE.categories || []).length;
 const homeBody = `<div class="hhead-bg">
 <header class="hhead">
-  <a class="hhead-btn hhead-back" href="${u('/')}" data-back aria-label="ย้อนกลับ">${figSvg('chev-left')}</a>
   <div class="hhead-text">
     <h1 class="hhead-title">${esc(SITE.title)}</h1>
     <p class="hhead-sub">${esc(SITE.subtitle)}</p>
