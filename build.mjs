@@ -231,12 +231,6 @@ const homeBody = `<header class="topbar">
 </header>
 
 <main id="main" class="wrap">
-  <section class="banner">
-    <h2 class="banner-title">${esc(SITE.bannerTitle)}</h2>
-    <p class="banner-sub">${esc(SITE.bannerSubtitle)}</p>
-    ${SITE.bannerImage ? `<img class="banner-img" src="${esc(u(SITE.bannerImage))}" alt="" loading="lazy" decoding="async">` : ''}
-  </section>
-
   <form class="search" role="search" onsubmit="return false">
     ${iconSearch}
     <label class="skip" for="q">ค้นหา</label>
@@ -250,11 +244,6 @@ ${catCards || '    <li class="empty">ยังไม่มีหมวด</li>'}
 
   <ul class="cat-list" id="searchResults" hidden></ul>
   <p class="empty" id="searchEmpty" hidden>ไม่พบเนื้อหาที่ค้นหา</p>
-
-  <div class="btn-row">
-    <a class="btn" href="${u('/c/article.html')}">บทความ</a>
-    <a class="btn" href="${u('/c/video.html')}">วิดีโอท่าบริหาร</a>
-  </div>
 
   <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
 </main>`;
