@@ -210,13 +210,15 @@ const pages = files.map(f => {
 }).sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, 'th'));
 
 // ---------- หน้าแรก ----------
+function iconSrc(name) { return u(`/assets/icons/${name}.svg`); }
 const catCards = (SITE.categories || []).map(c => {
   const n = pages.filter(p => p.category === c.slug).length;
   const first = pages.find(p => p.category === c.slug);
   const href = n === 1 && first ? u(`/a/${first.slug}.html`) : u(`/c/${c.slug}.html`);
   return `    <li>
       <a class="cat" href="${esc(href)}">
-        <img class="cat-img" src="${esc(u(c.image))}" alt="" loading="lazy" decoding="async" width="110" height="102">
+        ${c.image ? `<img class="cat-img" src="${esc(u(c.image))}" alt="" loading="lazy" decoding="async" width="110" height="102">`
+          : `<span class="cat-img cat-ic"><img src="${esc(iconSrc(c.icon))}" alt="" width="56" height="56"></span>`}
         <span class="cat-body">
           <span class="cat-title">${esc(c.title)}</span>
           <span class="cat-desc">${esc(c.desc)}</span>
@@ -258,7 +260,6 @@ writeFileSync(join(DIST, 'index.html'), layout({ isHome: true, body: homeBody, c
 // ---------- หน้าบทเรียน ----------
 mkdirSync(join(DIST, 'c'), { recursive: true });
 
-const iconSrc = (name) => u(`/assets/icons/${name}.svg`);
 const ytId = (s = '') => (s.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/) || s.match(/^([\w-]{11})$/) || [])[1] || '';
 
 const feedbackHtml = (p) => `<section class="feedback" data-fb="${esc(p.slug)}" aria-labelledby="fb-h-${esc(p.slug)}">
