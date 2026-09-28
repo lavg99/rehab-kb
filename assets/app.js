@@ -39,16 +39,58 @@
     const items = [...document.querySelectorAll(cq.dataset.filter)];
     const empty = document.getElementById('cqEmpty');
     const heads = [...document.querySelectorAll('.ch-h')];
-    cq.addEventListener('input', () => {
+    // หน้ารวมบทความ: ปุ่มกรองหมวดทำงานร่วมกับช่องค้นหา
+    const chips = [...document.querySelectorAll('#artChips .art-chip')];
+    const count = document.getElementById('artCount');
+    let cat = '';
+    const apply = () => {
       const term = cq.value.trim().toLowerCase();
       let shown = 0;
-      items.forEach(li => { const on = !term || (li.dataset.q || '').includes(term); li.hidden = !on; if (on) shown++; });
+      items.forEach(li => {
+        const on = (!term || (li.dataset.q || '').includes(term)) && (!cat || li.dataset.cat === cat);
+        li.hidden = !on; if (on) shown++;
+      });
+      if (count) count.textContent = `${shown} เรื่อง`;
       heads.forEach(h => {
         const list = h.nextElementSibling;
         h.hidden = !!term && list && ![...list.children].some(li => !li.hidden);
       });
       if (empty) empty.hidden = shown > 0;
-    });
+    };
+    cq.addEventListener('input', apply);
+    chips.forEach(b => b.addEventListener('click', () => {
+      cat = b.dataset.cat;
+      chips.forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+      apply();
+    }));
+  }
+
+  /* ---------- แบนเนอร์หน้าแรก: เลื่อนเองทุก 5 วินาที ปัดเองได้ ---------- */
+  const banTrack = document.getElementById('banTrack');
+  if (banTrack && banTrack.children.length > 1) {
+    const slides = [...banTrack.children];
+    const dots = [...document.querySelectorAll('#banDots .hban-dot')];
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let idx = 0, timer = null, paused = false;
+    const go = (i) => {
+      idx = (i + slides.length) % slides.length;
+      banTrack.scrollTo({ left: slides[idx].offsetLeft, behavior: still ? 'auto' : 'smooth' });
+    };
+    const mark = () => dots.forEach((d, i) => d.setAttribute('aria-current', i === idx ? 'true' : 'false'));
+    const start = () => { clearInterval(timer); timer = setInterval(() => { if (!paused && !document.hidden) go(idx + 1); }, 5000); };
+    let st = null;
+    banTrack.addEventListener('scroll', () => {
+      clearTimeout(st);
+      st = setTimeout(() => {
+        const i = Math.round(banTrack.scrollLeft / banTrack.clientWidth);
+        if (i !== idx) { idx = i; start(); }
+        mark();
+      }, 80);
+    }, { passive: true });
+    dots.forEach((d, i) => d.addEventListener('click', () => { go(i); start(); }));
+    ['pointerenter', 'focusin'].forEach(e => banTrack.parentElement.addEventListener(e, () => { paused = true; }));
+    ['pointerleave', 'focusout'].forEach(e => banTrack.parentElement.addEventListener(e, () => { paused = false; }));
+    mark(); start();
   }
 
   /* ---------- แท็บในหน้าบทเรียน ---------- */
@@ -231,6 +273,47 @@
       fsAdd('feedback', { a, s: v, d: today() });
     }));
   });
+
+  /* ---------- แบบประเมินความพึงพอใจ ---------- */
+  const svForm = document.getElementById('svForm');
+  if (svForm) {
+    const done = document.getElementById('svDone');
+    const err = document.getElementById('svErr');
+    const btn = document.getElementById('svSubmit');
+    const SV_KEY = 'rehab-kb-survey';
+    const showDone = () => { svForm.hidden = true; done.hidden = false; done.focus(); };
+    let sent = null;
+    try { sent = localStorage.getItem(SV_KEY); } catch {}
+    if (sent === today()) showDone();          // ตอบได้วันละครั้งต่อเครื่อง
+    svForm.addEventListener('change', (e) => {
+      const fs = e.target.closest('fieldset');
+      if (fs) fs.classList.remove('is-miss');
+    });
+    svForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(svForm);
+      const need = [...svForm.querySelectorAll('fieldset[data-q]')];
+      const miss = need.filter(f => !fd.get(f.dataset.q));
+      need.forEach(f => f.classList.toggle('is-miss', miss.includes(f)));
+      if (miss.length) {
+        err.textContent = `ยังไม่ได้ตอบ ${miss.length} ข้อ (กรอบสีแดง)`;
+        err.hidden = false;
+        miss[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      err.hidden = true;
+      const data = { d: today(), r: fd.get('r') };
+      need.forEach(f => { if (f.dataset.q !== 'r') data[f.dataset.q] = Number(fd.get(f.dataset.q)); });
+      const note = String(fd.get('c') || '').trim().slice(0, 300);
+      if (note) data.c = note;
+      btn.disabled = true; btn.textContent = 'กำลังส่ง…';
+      const ok = await fsAdd('survey', data);
+      btn.disabled = false; btn.textContent = 'ส่งแบบประเมิน';
+      if (!ok) { err.textContent = 'ส่งไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองใหม่อีกครั้ง'; err.hidden = false; return; }
+      try { localStorage.setItem(SV_KEY, today()); } catch {}
+      showDone();
+    });
+  }
 
   const qrPrint = document.getElementById('qrPrint');
   if (qrPrint) qrPrint.addEventListener('click', () => window.print());

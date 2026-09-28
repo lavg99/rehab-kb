@@ -121,9 +121,8 @@
       "icon": "nav-home"
     },
     {
-      "label": "คลังความรู้",
-      "href": "/",
-      "active": true,
+      "label": "บทความ",
+      "href": "/articles.html",
       "icon": "nav-book"
     },
     {
@@ -132,11 +131,55 @@
       "icon": "nav-bookmark"
     },
     {
+      "label": "แบบประเมิน",
+      "href": "/survey.html",
+      "icon": "nav-survey"
+    },
+    {
       "label": "ติดต่อ",
       "href": "/contact.html",
       "icon": "nav-chat"
     }
   ],
   "siteUrl": "https://rehabkb-srp.web.app",
-  "firestoreProject": "rehabkb-srp"
+  "firestoreProject": "rehabkb-srp",
+  "banners": [
+    {
+      "image": "/assets/banner/b1.webp",
+      "alt": "เรียนรู้ เข้าใจ ดูแลสุขภาพไปด้วยกัน — คลังความรู้เพื่อการฟื้นฟูสุขภาพ"
+    },
+    {
+      "image": "/assets/banner/b2.webp",
+      "alt": "เคลื่อนไหวอย่างมั่นใจ ดูแลตัวเองได้ทุกวัน — เรียนรู้การฟื้นฟูไปกับทีมกายภาพบำบัด"
+    }
+  ],
+  "survey": {
+    "title": "ช่วยเราพัฒนาคลังความรู้",
+    "intro": "ตอบ 8 ข้อ ใช้เวลาไม่ถึง 1 นาที",
+    "roles": [
+      {
+        "v": "patient",
+        "t": "ผู้ป่วย"
+      },
+      {
+        "v": "family",
+        "t": "ญาติ/ผู้ดูแล"
+      },
+      {
+        "v": "staff",
+        "t": "บุคลากร"
+      },
+      {
+        "v": "other",
+        "t": "อื่น ๆ"
+      }
+    ],
+    "questions": [
+      "เนื้อหาอ่านแล้วเข้าใจง่าย",
+      "รูปภาพและท่าบริหารช่วยให้เข้าใจมากขึ้น",
+      "หาเรื่องที่ต้องการได้ง่าย",
+      "นำความรู้ไปใช้ดูแลตัวเองได้จริง",
+      "ความพึงพอใจโดยรวม"
+    ]
+  }
 }

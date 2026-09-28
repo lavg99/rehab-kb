@@ -113,13 +113,13 @@ const iconTheme = `<svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="
 
 function tabbar(current = '/') {
   const items = (SITE.nav || []).map(n => {
-    // ปุ่มที่ active ต้องมีตัวเดียว — ใช้ href ตรงกับหน้าปัจจุบัน
-    // หน้าแรก/บทเรียน/หมวด ให้ไฮไลต์ "คลังความรู้" (ตัวที่ตั้ง active ไว้ใน site.json)
-    const on = current === '/' ? !!n.active : n.href === current;
+    // ปุ่มที่ active มีตัวเดียว — href ตรงกับหน้าปัจจุบัน
+    // หน้าแรก = "หน้าหลัก" · หน้าหมวด/บทเรียน/รวมบทความ = "บทความ"
+    const on = n.href === current;
     return `<a class="tab" href="${esc(u(n.href))}"${on ? ' aria-current="page"' : ''}><span class="tab-ic">${n.icon ? figSvg(n.icon) : ''}</span><span class="tab-lbl">${esc(n.label)}</span></a>`;
   }).join('\n      ');
   return `<nav class="tabbar" aria-label="เมนูหลัก">
-    <div class="tabbar-in">
+    <div class="tabbar-in" style="--n:${(SITE.nav || []).length}">
       ${items}
     </div>
   </nav>`;
@@ -247,7 +247,13 @@ const homeBody = `<div class="hhead-bg">
 </div>
 
 <main id="main" class="wrap hwrap">
-  <form class="hsearch" role="search" onsubmit="return false">
+${(SITE.banners || []).length ? `  <section class="hban" aria-roledescription="carousel" aria-label="แบนเนอร์">
+    <div class="hban-track" id="banTrack">
+${SITE.banners.map((b, i) => `      <div class="hban-slide" role="group" aria-roledescription="slide" aria-label="${i + 1} จาก ${SITE.banners.length}">${b.href ? `<a href="${esc(u(b.href))}">` : ''}<img src="${esc(u(b.image))}" alt="${esc(b.alt || '')}" width="1080" height="540"${i ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async">${b.href ? '</a>' : ''}</div>`).join('\n')}
+    </div>
+    ${SITE.banners.length > 1 ? `<div class="hban-dots" id="banDots">${SITE.banners.map((b, i) => `<button type="button" class="hban-dot" aria-label="แบนเนอร์ที่ ${i + 1}"${i ? '' : ' aria-current="true"'}></button>`).join('')}</div>` : ''}
+  </section>
+` : ''}  <form class="hsearch" role="search" onsubmit="return false">
     ${figSvg('search', 'hsearch-ic')}
     <label class="skip" for="q">ค้นหา</label>
     <input type="search" id="q" name="q" placeholder="${esc(SITE.searchPlaceholder)}" autocomplete="off">
@@ -435,7 +441,7 @@ ${p.refs.map(x => `      <li>${esc(x)}</li>`).join('\n')}
 
   writeFileSync(join(DIST, 'a', `${p.slug}.html`), layout({
     track: p.slug,
-    title: p.title, desc: p.summary, body, current: '/',
+    title: p.title, desc: p.summary, body, current: '/articles.html',
   }));
 }
 
@@ -506,7 +512,112 @@ ${other.map(p => condCard(p, true)).join('\n')}
   <p class="foot ch-foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
 </main>`;
 
-  writeFileSync(join(DIST, 'c', `${g.slug}.html`), layout({ title: g.title, desc: g.desc, body, current: '/' }));
+  writeFileSync(join(DIST, 'c', `${g.slug}.html`), layout({ title: g.title, desc: g.desc, body, current: '/articles.html' }));
+}
+
+// ---------- หน้ารวมบทความ (เมนู "บทความ") ----------
+{
+  const cats = SITE.categories || [];
+  const catTitle = Object.fromEntries(cats.map(c => [c.slug, c.title]));
+  const all = cats.flatMap(c => pages.filter(p => p.category === c.slug));
+  const card = (p) => condCard(p).replace('<li data-q="', `<li data-cat="${esc(p.category)}" data-q="${esc((catTitle[p.category] || '').toLowerCase())} `);
+  const body = `<div class="ch-head-bg">
+  <header class="ch-head">
+    <a class="ch-back" href="${u('/')}" data-back aria-label="กลับหน้าหลัก">${figSvg('chev-left')}</a>
+    <h1 class="ch-title">บทความ</h1>
+    <a class="ch-saved" href="${u('/saved.html')}" aria-label="ดูที่บันทึกไว้">${figSvg('nav-bookmark')}</a>
+  </header>
+</div>
+
+<main id="main" class="wrap ch-wrap">
+  <p class="ch-crumb"><a href="${u('/')}">หน้าหลัก</a> / บทความทั้งหมด</p>
+  <form class="ch-search" role="search" onsubmit="return false">
+    ${figSvg('search', 'ch-search-ic')}
+    <label class="skip" for="cq">ค้นหาบทความ</label>
+    <input type="search" id="cq" placeholder="ค้นหาโรค อาการ หรือท่าบริหาร" autocomplete="off" data-filter="#allList li">
+  </form>
+  <div class="art-chips" id="artChips" role="group" aria-label="กรองตามหมวด">
+    <button type="button" class="art-chip" data-cat="" aria-pressed="true">ทั้งหมด</button>
+${cats.map(c => `    <button type="button" class="art-chip" data-cat="${esc(c.slug)}" aria-pressed="false">${esc(c.title)}</button>`).join('\n')}
+  </div>
+  <p class="art-count" id="artCount" aria-live="polite">${all.length} เรื่อง</p>
+  <ul class="cc-list" id="allList">
+${all.map(card).join('\n')}
+  </ul>
+  <p class="empty" id="cqEmpty" hidden>ไม่พบบทความที่ค้นหา</p>
+  <p class="foot ch-foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
+</main>`;
+  writeFileSync(join(DIST, 'articles.html'), layout({ title: 'บทความ', desc: 'บทความและท่าบริหารทั้งหมด', body, current: '/articles.html' }));
+}
+
+// ---------- หน้าแบบประเมินความพึงพอใจ (เมนู "แบบประเมิน") ----------
+// ใช้ทำตัวชี้วัด CQI: ความพึงพอใจรายข้อ + ความมั่นใจดูแลตัวเองก่อน/หลังใช้ · ไม่เก็บชื่อหรือข้อมูลส่วนตัว
+{
+  const SV = SITE.survey || {};
+  const scale = (name, lo, hi) => `<div class="sv-scale">
+${[1, 2, 3, 4, 5].map(v => `        <label class="sv-opt"><input type="radio" name="${name}" value="${v}" required><span>${v}</span></label>`).join('\n')}
+      </div>
+      <div class="sv-ends" aria-hidden="true"><span>${esc(lo)}</span><span>${esc(hi)}</span></div>`;
+  const qs = (SV.questions || []).map((q, i) => `    <fieldset class="sv-card sv-q" data-q="q${i + 1}">
+      <legend class="sv-legend"><span class="sv-no">${i + 1}</span>${esc(q)}</legend>
+      ${scale(`q${i + 1}`, 'น้อยที่สุด', 'มากที่สุด')}
+    </fieldset>`).join('\n');
+  const body = `<div class="ch-head-bg">
+  <header class="ch-head">
+    <a class="ch-back" href="${u('/')}" data-back aria-label="กลับหน้าหลัก">${figSvg('chev-left')}</a>
+    <h1 class="ch-title">แบบประเมิน</h1>
+  </header>
+</div>
+
+<main id="main" class="wrap ch-wrap">
+  <p class="ch-crumb"><a href="${u('/')}">หน้าหลัก</a> / แบบประเมินความพึงพอใจ</p>
+  <section class="ch-hero sv-hero">
+    <div class="ch-hero-text">
+      <h2 class="ch-hero-h">${esc(SV.title || 'ช่วยเราพัฒนาคลังความรู้')}</h2>
+      <p class="ch-hero-p sv-hero-p">${esc(SV.intro || '')}</p>
+    </div>
+    ${figSvg('nav-survey', 'sv-hero-ic')}
+  </section>
+
+  <form class="sv-form" id="svForm" novalidate>
+    <fieldset class="sv-card" data-q="r">
+      <legend class="sv-legend">ผู้ตอบแบบประเมิน</legend>
+      <div class="sv-roles">
+${(SV.roles || []).map(r => `        <label class="sv-role"><input type="radio" name="r" value="${esc(r.v)}" required><span>${esc(r.t)}</span></label>`).join('\n')}
+      </div>
+    </fieldset>
+
+    <h2 class="ch-h ch-h-sm sv-h">ความพึงพอใจต่อคลังความรู้</h2>
+${qs}
+
+    <h2 class="ch-h ch-h-sm sv-h">ความมั่นใจในการดูแลตัวเอง</h2>
+    <fieldset class="sv-card sv-q" data-q="pre">
+      <legend class="sv-legend">ก่อนใช้คลังความรู้ คุณมั่นใจว่าดูแลตัวเองได้ถูกต้องระดับไหน</legend>
+      ${scale('pre', 'ไม่มั่นใจเลย', 'มั่นใจมาก')}
+    </fieldset>
+    <fieldset class="sv-card sv-q" data-q="post">
+      <legend class="sv-legend">หลังใช้คลังความรู้ คุณมั่นใจว่าดูแลตัวเองได้ถูกต้องระดับไหน</legend>
+      ${scale('post', 'ไม่มั่นใจเลย', 'มั่นใจมาก')}
+    </fieldset>
+
+    <div class="sv-card">
+      <label class="sv-legend" for="svNote">ข้อเสนอแนะเพิ่มเติม (ไม่บังคับ)</label>
+      <textarea id="svNote" name="c" rows="3" maxlength="300" placeholder="ไม่ต้องใส่ชื่อหรือเบอร์โทร"></textarea>
+    </div>
+
+    <p class="sv-err" id="svErr" role="alert" hidden></p>
+    <button type="submit" class="btn btn-primary sv-submit" id="svSubmit">ส่งแบบประเมิน</button>
+    <p class="st-note">ไม่เก็บชื่อหรือข้อมูลส่วนตัว ใช้เพื่อพัฒนาบริการของแผนกเท่านั้น</p>
+  </form>
+
+  <section class="sv-card sv-done" id="svDone" hidden tabindex="-1">
+    <h2 class="sv-done-h">ขอบคุณที่ช่วยประเมินครับ</h2>
+    <p>คำตอบของคุณช่วยให้ทีมฟื้นฟูปรับปรุงเนื้อหาให้เข้าใจง่ายขึ้น</p>
+    <a class="btn btn-primary" href="${u('/articles.html')}">อ่านบทความต่อ</a>
+  </section>
+  <p class="foot ch-foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
+</main>`;
+  writeFileSync(join(DIST, 'survey.html'), layout({ title: 'แบบประเมินความพึงพอใจ', desc: 'แบบประเมินความพึงพอใจคลังความรู้', body, current: '/survey.html' }));
 }
 
 // ---------- หน้าบันทึกไว้ / ติดต่อ ----------
@@ -589,6 +700,18 @@ writeFileSync(join(DIST, 'stats.html'), layout({
         <tbody id="stBody"></tbody>
       </table>
     </div>
+  </section>
+
+  <section class="st-block" id="svWrap" hidden data-qs="${esc(JSON.stringify((SITE.survey || {}).questions || []))}">
+    <h2 class="section-h">แบบประเมินความพึงพอใจ</h2>
+    <section class="st-cards">
+      <div class="st-card"><span class="st-num" id="svN">0</span><span class="st-lbl">คนตอบ</span></div>
+      <div class="st-card"><span class="st-num" id="svSat">–</span><span class="st-lbl">พึงพอใจโดยรวม มาก/มากที่สุด</span></div>
+      <div class="st-card"><span class="st-num" id="svPre">–</span><span class="st-lbl">มั่นใจดูแลตัวเอง ก่อนใช้ (เต็ม 5)</span></div>
+      <div class="st-card"><span class="st-num" id="svPost">–</span><span class="st-lbl">มั่นใจดูแลตัวเอง หลังใช้ (เต็ม 5)</span></div>
+    </section>
+    <div class="sv-bars" id="svBars"></div>
+    <p class="st-note" id="svRoles"></p>
   </section>
 
   <div class="btn-row">

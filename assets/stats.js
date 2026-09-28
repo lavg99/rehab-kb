@@ -24,8 +24,16 @@
         { fieldFilter: { field: { fieldPath: 'd' }, op: 'LESS_THAN_OR_EQUAL', value: { stringValue: b } } },
       ] } },
     } };
-    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
+    // เน็ตมือถือ/โรงพยาบาลหลุดบ่อย — ลองซ้ำสูงสุด 3 ครั้งก่อนแจ้งว่าโหลดไม่สำเร็จ
+    let r = null;
+    for (let i = 0; i < 3; i++) {
+      try {
+        r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        if (r.ok) break;
+      } catch (e) { r = null; }
+      await new Promise(res => setTimeout(res, 600 * (i + 1)));
+    }
+    if (!r || !r.ok) throw new Error('HTTP ' + (r ? r.status : 'network'));
     const out = await r.json();
     return out.filter(x => x.document).map(x => {
       const f = x.document.fields || {};
@@ -64,7 +72,8 @@
         const idx = await fetch(`${BASE}/search.json`).then(r => r.json());
         idx.forEach(x => { const m = x.u.match(/\/a\/([^/]+)\.html$/); if (m) titles[m[1]] = x.t; });
       }
-      const [views, fb] = await Promise.all([query('views', a, b), query('feedback', a, b)]);
+      const [views, fb, sv] = await Promise.all([query('views', a, b), query('feedback', a, b), query('survey', a, b).catch(() => [])]);
+      survey(sv);
       const slugs = new Set([...Object.keys(titles), ...views.map(v => v.a), ...fb.map(f => f.a)]);
       const rows = [...slugs].map(s => {
         const v = views.filter(x => x.a === s), f = fb.filter(x => x.a === s);
@@ -93,6 +102,29 @@
     }
   }
 
+  // แบบประเมินความพึงพอใจ: ร้อยละพึงพอใจมาก–มากที่สุด (4-5) + ความมั่นใจก่อน/หลัง
+  function survey(sv) {
+    const wrap = $('svWrap');
+    const qs = JSON.parse(wrap.dataset.qs || '[]');
+    const avg = (k) => sv.length ? sv.reduce((t, x) => t + (x[k] || 0), 0) / sv.length : null;
+    const good = (k) => sv.length ? sv.filter(x => x[k] >= 4).length / sv.length : null;
+    const last = `q${qs.length}`;
+    $('svN').textContent = fmt(sv.length);
+    $('svSat').textContent = sv.length ? Math.round(good(last) * 100) + '%' : '–';
+    $('svPre').textContent = sv.length ? avg('pre').toFixed(2) : '–';
+    $('svPost').textContent = sv.length ? avg('post').toFixed(2) : '–';
+    $('svBars').innerHTML = qs.map((q, i) => {
+      const g = good(`q${i + 1}`), m = avg(`q${i + 1}`);
+      return `<div class="sv-bar"><span>${i + 1}. ${esc(q)}</span><span>${g == null ? '–' : Math.round(g * 100) + '%'}${m == null ? '' : ` · เฉลี่ย ${m.toFixed(2)}`}</span>
+        <div class="sv-bar-track"><div class="sv-bar-fill" style="width:${g == null ? 0 : Math.round(g * 100)}%"></div></div></div>`;
+    }).join('');
+    const RL = { patient: 'ผู้ป่วย', family: 'ญาติ/ผู้ดูแล', staff: 'บุคลากร', other: 'อื่น ๆ' };
+    const byRole = Object.entries(RL).map(([k, v]) => `${v} ${fmt(sv.filter(x => x.r === k).length)}`).join(' · ');
+    $('svRoles').textContent = sv.length ? `ผู้ตอบ: ${byRole} · แถบสี = ร้อยละที่ตอบ 4-5 (มาก–มากที่สุด)` : 'ยังไม่มีคนตอบแบบประเมินในช่วงนี้';
+    wrap.hidden = false;
+    window.__stSurvey = sv;
+  }
+
   $('stRange').addEventListener('submit', (e) => { e.preventDefault(); load(); });
 
   // CSV สำหรับเปิดใน Excel ทำ run chart: สรุปรายบทความ + รายวัน
@@ -101,6 +133,19 @@
     const q = (s) => `"${String(s).replace(/"/g, '""')}"`;
     const lines = ['บทความ,เปิดอ่าน,จาก QR,ตอบประเมิน,คะแนนเฉลี่ย (เต็ม 5),ร้อยละเข้าใจขึ้นไป'];
     lastRows.forEach(r => lines.push([q(r.t), r.views, r.qr, r.n, r.avg == null ? '' : r.avg.toFixed(2), r.good == null ? '' : Math.round(r.good * 100)].join(',')));
+    const sv = window.__stSurvey || [];
+    if (sv.length) {
+      const qs = JSON.parse($('svWrap').dataset.qs || '[]');
+      lines.push('', 'แบบประเมินความพึงพอใจ,คนตอบ,คะแนนเฉลี่ย (เต็ม 5),ร้อยละ 4-5');
+      const row = (label, k) => {
+        const m = sv.reduce((t, x) => t + (x[k] || 0), 0) / sv.length;
+        const g = sv.filter(x => x[k] >= 4).length / sv.length;
+        lines.push([q(label), sv.length, m.toFixed(2), Math.round(g * 100)].join(','));
+      };
+      qs.forEach((x, i) => row(`${i + 1}. ${x}`, `q${i + 1}`));
+      row('ความมั่นใจดูแลตัวเอง ก่อนใช้', 'pre');
+      row('ความมั่นใจดูแลตัวเอง หลังใช้', 'post');
+    }
     lines.push('', 'วันที่,เปิดอ่าน');
     const per = {};
     (window.__stViews || []).forEach(v => { per[v.d] = (per[v.d] || 0) + 1; });
