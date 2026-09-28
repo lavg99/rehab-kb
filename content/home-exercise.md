@@ -1,4 +1,6 @@
 ---
+coverAlt: ผู้สูงอายุและผู้ดูแลเตรียมเรียนรู้การบริหารร่างกายที่บ้าน
+coverImage: /assets/article-covers/home-exercise.webp
 title: ท่าบริหารง่ายๆ ทำเองที่บ้าน
 summary: วันละ 10-15 นาที ทำได้ทุกวัน
 category: bone

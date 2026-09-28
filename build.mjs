@@ -208,6 +208,9 @@ const pages = files.map(f => {
     related: Array.isArray(meta.related) ? meta.related.filter(Boolean) : [],
     tagline: typeof meta.tagline === 'string' ? meta.tagline : '',
     thumb: typeof meta.thumb === 'string' ? meta.thumb : '',
+    // ภาพปกในหน้าบทความ (ใต้ชื่อเรื่อง) — ไฟล์ <ชื่อ>.webp คู่กับ <ชื่อ>-small.webp
+    coverImage: typeof meta.coverImage === 'string' ? meta.coverImage : '',
+    coverAlt: typeof meta.coverAlt === 'string' ? meta.coverAlt : '',
     cardSize: Number(meta.cardSize) || 0,
     cardTitle: typeof meta.cardTitle === 'string' ? meta.cardTitle : '',
     listAs: typeof meta.list === 'string' ? meta.list : '',
@@ -216,6 +219,14 @@ const pages = files.map(f => {
     html: md(body),
   };
 }).sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, 'th'));
+
+const coverHtml = (p) => {
+  if (!p.coverImage) return '';
+  const small = p.coverImage.replace(/\.webp$/, '-small.webp');
+  return `<figure class="art-cover">
+    <img src="${esc(u(p.coverImage))}" srcset="${esc(u(small))} 600w, ${esc(u(p.coverImage))} 1200w" sizes="(max-width: 640px) 100vw, 720px" width="1200" height="800" alt="${esc(p.coverAlt)}" decoding="async" fetchpriority="high">
+  </figure>`;
+};
 
 // ---------- หน้าแรก ----------
 function iconSrc(name) { return u(`/assets/icons/${name}.svg`); }
@@ -333,6 +344,7 @@ function diseaseBody(p, cat, crumb) {
       ${p.summary ? `<p class="lesson-sub">${esc(p.summary)}</p>` : ''}
     </div>
   </div>
+  ${coverHtml(p)}
 
   <h3 class="dz-h">วิดีโอแนะนำ</h3>
   ${video}
@@ -398,6 +410,7 @@ ${p.steps.map(s => `    <li class="step">
   <p class="crumb">${crumb}</p>
   <h2 class="lesson-title">${esc(p.title)}</h2>
   ${p.summary ? `<p class="lesson-sub">${esc(p.summary)}</p>` : ''}
+  ${coverHtml(p)}
 
   ${p.video ? `<div class="media">
     <img src="${esc(u(p.video))}" alt="" loading="lazy" decoding="async">

@@ -1,4 +1,6 @@
 ---
+coverAlt: ผู้สูงอายุและนักกายภาพบำบัดกับอุปกรณ์ช่วยเดิน
+coverImage: /assets/article-covers/walking-aids.webp
 thumb: /assets/dz/walking-aids.webp
 tagline: เรียนรู้การใช้อุปกรณ์อย่างเหมาะสม
 list: cond

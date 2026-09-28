@@ -1133,3 +1133,7 @@ body:has(.ch-head) { background: var(--home-bg); }
 .sv-bar { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; font-size: 14px; }
 .sv-bar-track { grid-column: 1 / -1; height: 10px; border-radius: 5px; background: var(--tint); overflow: hidden; }
 .sv-bar-fill { height: 100%; background: var(--accent); border-radius: 5px; }
+
+/* ภาพปกในหน้าบทความ (ใต้ชื่อเรื่อง ก่อนเนื้อหา) */
+.art-cover { margin: 16px 0 4px; }
+.art-cover img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 20px; background: var(--tint); }

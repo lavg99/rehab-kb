@@ -1,4 +1,6 @@
 ---
+coverAlt: ผู้ป่วยและญาติพูดคุยกับนักกายภาพบำบัดเรื่องการฟื้นฟู
+coverImage: /assets/article-covers/stroke-rehab.webp
 cardTitle: เรียนรู้การฟื้นฟูระบบประสาท
 cardSize: 13
 thumb: /assets/dz/stroke-rehab.webp
