@@ -1,10 +1,12 @@
 ---
-title: กล้ามเนื้อลีบในผู้สูงอายุ
+thumb: /assets/dz/sarcopenia.webp
+tagline: ดูแลการเคลื่อนไหวในชีวิตประจำวัน
+title: กล้ามเนื้อและข้อ
 summary: กล้ามเนื้อเล็กลงและไม่มีแรง ทำกิจวัตรได้ลำบาก
 type: disease
 category: elderly
 icon: old-woman
-order: 2
+order: 3
 youtube: 
 related:
 reviewer: 

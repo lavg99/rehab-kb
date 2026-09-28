@@ -1,9 +1,12 @@
 ---
-title: การใช้ไม้เท้าและอุปกรณ์ช่วยเดิน
+thumb: /assets/dz/walking-aids.webp
+tagline: เรียนรู้การใช้อุปกรณ์อย่างเหมาะสม
+list: cond
+title: การเดินและอุปกรณ์ช่วย
 summary: เลือกให้เหมาะ ใช้ให้ถูก ลดการหกล้ม
 category: elderly
 cover: /assets/img/elderly.png
-order: 3
+order: 4
 reviewer: 
 reviewed: 
 refs:

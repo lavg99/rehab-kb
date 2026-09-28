@@ -4,7 +4,7 @@ summary: ดูแลผู้ป่วยที่ลุกเองไม่�
 type: disease
 category: elderly
 icon: body
-order: 3
+order: 8
 youtube: 
 related:
 reviewer: 

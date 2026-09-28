@@ -1,10 +1,12 @@
 ---
-title: ภาวะเสี่ยงหกล้ม
+thumb: /assets/dz/fall-risk.webp
+tagline: จัดบ้านและใช้ชีวิตอย่างปลอดภัย
+title: ป้องกันการหกล้ม
 summary: ทรงตัวไม่ดี เคยล้ม หรือกลัวล้ม
 type: disease
 category: elderly
 icon: cane
-order: 1
+order: 2
 youtube: 
 related:
   - walking-aids

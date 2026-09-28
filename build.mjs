@@ -210,6 +210,7 @@ const pages = files.map(f => {
     thumb: typeof meta.thumb === 'string' ? meta.thumb : '',
     cardSize: Number(meta.cardSize) || 0,
     cardTitle: typeof meta.cardTitle === 'string' ? meta.cardTitle : '',
+    listAs: typeof meta.list === 'string' ? meta.list : '',
     steps,
     order: Number(meta.order ?? 999),
     html: md(body),
@@ -451,20 +452,21 @@ const thumbHtml = (p, w, h) => p.thumb
   : p.icon ? `<span class="cc-img cc-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="40" height="40"></span>`
   : p.cover ? `<img class="cc-img" src="${esc(u(p.cover))}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async">`
   : `<span class="cc-img cc-ic"></span>`;
-const condCard = (p, big = false) => `    <li data-q="${esc((p.title + ' ' + (p.cardTitle || '') + ' ' + (p.tagline || '') + ' ' + (p.summary || '')).toLowerCase())}">
+const condCard = (p, big = false) => `    <li data-q="${esc((p.title + ' ' + (p.cardTitle || '') + ' ' + (p.tagline || '').replaceAll('\\n', '') + ' ' + (p.summary || '')).toLowerCase())}">
       <a class="cc${big ? ' cc-big' : ''}" href="${u(`/a/${esc(p.slug)}.html`)}">
         ${big ? thumbHtml(p, 94, 70) : thumbHtml(p, 78, 66)}
         <span class="cc-body">
           <span class="cc-title${!big && [...p.title].length > 24 ? ' is-long' : ''}"${p.cardSize ? ` style="font-size:${p.cardSize}px"` : ''}>${esc(p.cardTitle || p.title)}</span>
-          <span class="cc-desc">${esc(p.tagline || p.summary)}</span>
+          <span class="cc-desc">${(p.tagline || p.summary).split('\\n').map(esc).join('<br>')}</span>
         </span>
         ${figSvg('chev-right', 'cc-chev')}
       </a>
     </li>`;
 
 for (const g of groups) {
-  const dz = g.list.filter(p => p.type === 'disease');
-  const other = g.list.filter(p => p.type !== 'disease');
+  const inCond = p => p.type === 'disease' || p.listAs === 'cond';
+  const dz = g.list.filter(inCond);
+  const other = g.list.filter(p => !inCond(p));
   const c = g.cat || {};
   const hero = `<section class="ch-hero">
     <div class="ch-hero-text">
@@ -475,8 +477,8 @@ for (const g of groups) {
   </section>`;
   const search = g.list.length > 3 ? `<form class="ch-search" role="search" onsubmit="return false">
     ${figSvg('search', 'ch-search-ic')}
-    <label class="skip" for="cq">ค้นหาโรคหรืออาการ</label>
-    <input type="search" id="cq" placeholder="ค้นหาโรคหรืออาการ" autocomplete="off" data-filter="#condList li, #artList li">
+    <label class="skip" for="cq">${esc(c.searchHint || 'ค้นหาโรคหรืออาการ')}</label>
+    <input type="search" id="cq" placeholder="${esc(c.searchHint || 'ค้นหาโรคหรืออาการ')}" autocomplete="off" data-filter="#condList li, #artList li">
   </form>` : '';
 
   const body = `<div class="ch-head-bg">
@@ -491,7 +493,7 @@ for (const g of groups) {
   <p class="ch-crumb"><a href="${u('/')}">คลังความรู้</a> / ${esc(g.title)}</p>
   ${g.cat ? hero : ''}
   ${search}
-  ${dz.length ? `<h2 class="ch-h">โรคและอาการ</h2>
+  ${dz.length ? `<h2 class="ch-h${c.listTitle ? ' ch-h-sm' : ''}">${esc(c.listTitle || 'โรคและอาการ')}</h2>
   <ul class="cc-list" id="condList">
 ${dz.map(p => condCard(p)).join('\n')}
   </ul>` : ''}

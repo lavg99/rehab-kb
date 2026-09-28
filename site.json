@@ -38,7 +38,13 @@
       "slug": "elderly",
       "title": "ผู้สูงอายุ",
       "desc": "การทรงตัวและการดูแลสุขภาพ",
-      "image": "/assets/cat3d/elderly.webp"
+      "image": "/assets/cat3d/elderly.webp",
+      "heroTitle": "ทรงตัวมั่นใจ\nใส่ใจสุขภาพ",
+      "heroText": "ความรู้เพื่อการดูแล\nผู้สูงอายุ",
+      "heroImage": "/assets/hero/elderly.webp",
+      "mediaTitle": "สื่อการเรียนรู้",
+      "listTitle": "การทรงตัวและการดูแลสุขภาพ",
+      "searchHint": "ค้นหาหัวข้อการดูแลสุขภาพ"
     },
     {
       "slug": "cardio",

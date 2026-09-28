@@ -967,6 +967,8 @@ body:has(.ch-head) { background: var(--home-bg); }
 .ch-h { margin: 24px 0 12px; font-size: 21px; font-weight: 700; line-height: 32px; color: var(--ink); }
 .ch-h[hidden] { display: none; }
 .ch-h-art { margin-top: 32px; font-size: 20px; line-height: 30px; }
+/* หัวข้อรายการยาว (ผู้สูงอายุ) Figma ใช้ 20px สูง 30 */
+.ch-h-sm { font-size: 20px; line-height: 30px; margin-bottom: 14px; }
 
 .cc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 .cc-list li[hidden] { display: none; }
