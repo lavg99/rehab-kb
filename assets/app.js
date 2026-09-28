@@ -24,6 +24,15 @@
     });
   }
 
+  /* ---------- ปุ่มย้อนกลับหน้าแรก: ย้อนหน้าที่แล้วถ้ามาจากในเว็บ ---------- */
+  document.querySelectorAll('[data-back]').forEach(a => a.addEventListener('click', (e) => {
+    try {
+      if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) {
+        e.preventDefault(); history.back();
+      }
+    } catch { /* ใช้ลิงก์ปกติ */ }
+  }));
+
   /* ---------- แท็บในหน้าบทเรียน ---------- */
   const tabBtns = [...document.querySelectorAll('.tab-btn[role="tab"]')];
   if (tabBtns.length) {
@@ -98,6 +107,7 @@
   const catList = document.getElementById('catList');
   const results = document.getElementById('searchResults');
   const searchEmpty = document.getElementById('searchEmpty');
+  const catHead = document.getElementById('catHead');
 
   if (q && catList && results) {
     let index = null;
@@ -117,6 +127,7 @@
         const term = q.value.trim().toLowerCase();
         if (!term) {
           catList.hidden = false;
+          if (catHead) catHead.hidden = false;
           results.hidden = true;
           if (searchEmpty) searchEmpty.hidden = true;
           return;
@@ -126,6 +137,7 @@
           (x.t || '').toLowerCase().includes(term) || (x.s || '').toLowerCase().includes(term));
 
         catList.hidden = true;
+        if (catHead) catHead.hidden = true;
         results.hidden = hit.length === 0;
         if (searchEmpty) searchEmpty.hidden = hit.length > 0;
 

@@ -19,68 +19,72 @@
       "slug": "bone",
       "title": "ระบบกระดูก",
       "desc": "กระดูก ข้อต่อ และกล้ามเนื้อ",
-      "image": "/assets/img/knee.png"
+      "image": "/assets/cat3d/bone.webp"
     },
     {
       "slug": "neuro",
       "title": "ระบบประสาท",
       "desc": "สมอง เส้นประสาท และการเคลื่อนไหว",
-      "image": "/assets/img/brain.png"
+      "image": "/assets/cat3d/neuro.webp"
     },
     {
       "slug": "elderly",
       "title": "ผู้สูงอายุ",
       "desc": "การทรงตัวและการดูแลสุขภาพ",
-      "image": "/assets/img/elderly.png"
+      "image": "/assets/cat3d/elderly.webp"
     },
     {
       "slug": "cardio",
       "title": "ระบบหัวใจและปอด",
       "desc": "การหายใจ เสมหะ และฟื้นฟูหัวใจ",
-      "icon": "lungs"
+      "image": "/assets/cat3d/cardio.webp"
     },
     {
       "slug": "sports",
       "title": "บาดเจ็บจากกีฬา",
-      "desc": "ข้อเท้าแพลง เอ็นฉีก บาดเจ็บจากการฝึก",
-      "icon": "running"
+      "desc": "ข้อเท้าแพลง เอ็นฉีก และการฟื้นตัว",
+      "image": "/assets/cat3d/sports.webp"
     },
     {
       "slug": "office",
       "title": "วัยทำงาน",
       "desc": "ออฟฟิศซินโดรม ปวดคอ บ่า ไหล่ มือ",
-      "icon": "laptop"
+      "image": "/assets/cat3d/office.webp"
     },
     {
       "slug": "child",
       "title": "เด็กและพัฒนาการ",
-      "desc": "พัฒนาการการเคลื่อนไหวของเด็ก",
-      "icon": "child-care"
+      "desc": "พัฒนาการและการเคลื่อนไหวของเด็ก",
+      "image": "/assets/cat3d/child.webp"
     },
     {
       "slug": "women",
       "title": "สตรีและการตั้งครรภ์",
       "desc": "ตั้งครรภ์ หลังคลอด และอุ้งเชิงกราน",
-      "icon": "pregnant"
+      "image": "/assets/cat3d/women.webp"
     }
   ],
   "nav": [
     {
       "label": "หน้าหลัก",
-      "href": "/"
+      "href": "/",
+      "icon": "nav-home"
     },
     {
       "label": "คลังความรู้",
       "href": "/",
-      "active": true
+      "active": true,
+      "icon": "nav-book"
     },
     {
       "label": "บันทึกไว้",
-      "href": "/saved.html"
+      "href": "/saved.html",
+      "icon": "nav-bookmark"
     },
     {
       "label": "ติดต่อ",
-      "href": "/contact.html"
+      "href": "/contact.html",
+      "icon": "nav-chat"
     }
   ],
   "siteUrl": "https://rehabkb-srp.web.app",

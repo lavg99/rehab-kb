@@ -100,6 +100,9 @@ function md(src) {
 }
 
 // ---------- ชิ้นส่วนที่ใช้ซ้ำ ----------
+// ไอคอนจากไฟล์ Figma (rehab-kb › library-mobile 1) เก็บไว้ใน assets/figma — ฝังในหน้าเลย สีตาม currentColor
+const figSvg = (name, cls = '') => readFileSync(join(ROOT, 'assets', 'figma', `${name}.svg`), 'utf8')
+  .replace('<svg ', `<svg aria-hidden="true" focusable="false"${cls ? ` class="${cls}"` : ''} `);
 const iconSearch = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
 <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
@@ -113,7 +116,7 @@ function tabbar(current = '/') {
     // ปุ่มที่ active ต้องมีตัวเดียว — ใช้ href ตรงกับหน้าปัจจุบัน
     // หน้าแรก/บทเรียน/หมวด ให้ไฮไลต์ "คลังความรู้" (ตัวที่ตั้ง active ไว้ใน site.json)
     const on = current === '/' ? !!n.active : n.href === current;
-    return `<a class="tab" href="${esc(u(n.href))}"${on ? ' aria-current="page"' : ''}>${esc(n.label)}</a>`;
+    return `<a class="tab" href="${esc(u(n.href))}"${on ? ' aria-current="page"' : ''}><span class="tab-ic">${n.icon ? figSvg(n.icon) : ''}</span><span class="tab-lbl">${esc(n.label)}</span></a>`;
   }).join('\n      ');
   return `<nav class="tabbar" aria-label="เมนูหลัก">
     <div class="tabbar-in">
@@ -216,43 +219,48 @@ const catCards = (SITE.categories || []).map(c => {
   const first = pages.find(p => p.category === c.slug);
   const href = n === 1 && first ? u(`/a/${first.slug}.html`) : u(`/c/${c.slug}.html`);
   return `    <li>
-      <a class="cat" href="${esc(href)}">
-        ${c.image ? `<img class="cat-img" src="${esc(u(c.image))}" alt="" loading="lazy" decoding="async" width="110" height="102">`
-          : `<span class="cat-img cat-ic"><img src="${esc(iconSrc(c.icon))}" alt="" width="56" height="56"></span>`}
-        <span class="cat-body">
-          <span class="cat-title">${esc(c.title)}</span>
-          <span class="cat-desc">${esc(c.desc)}</span>
+      <a class="hcat" href="${esc(href)}">
+        <img class="hcat-img" src="${esc(u(c.image))}" alt="" width="68" height="68" decoding="async">
+        <span class="hcat-body">
+          <span class="hcat-title">${esc(c.title)}</span>
+          <span class="hcat-desc">${esc(c.desc)}</span>
         </span>
-        <span class="cat-chev" aria-hidden="true">›</span>
+        ${figSvg('chev-right', 'hcat-chev')}
       </a>
     </li>`;
 }).join('\n');
 
-const homeBody = `<header class="topbar">
-  <span class="back-btn" aria-hidden="true">‹</span>
-  <div class="head-text">
-    <h1 class="head-title">${esc(SITE.title)}</h1>
-    <p class="head-sub">${esc(SITE.subtitle)}</p>
+const nCat = (SITE.categories || []).length;
+const homeBody = `<div class="hhead-bg">
+<header class="hhead">
+  <a class="hhead-btn hhead-back" href="${u('/')}" data-back aria-label="ย้อนกลับ">${figSvg('chev-left')}</a>
+  <div class="hhead-text">
+    <h1 class="hhead-title">${esc(SITE.title)}</h1>
+    <p class="hhead-sub">${esc(SITE.subtitle)}</p>
   </div>
-  <button type="button" id="themeBtn" class="theme-btn" aria-label="สลับโหมดสว่าง/มืด" title="สลับโหมดสว่าง/มืด">${iconTheme}</button>
+  <button type="button" id="themeBtn" class="hhead-btn hhead-theme" aria-label="สลับโหมดสว่าง/มืด" title="สลับโหมดสว่าง/มืด">${figSvg('moon')}</button>
 </header>
+</div>
 
-<main id="main" class="wrap">
-  <form class="search" role="search" onsubmit="return false">
-    ${iconSearch}
+<main id="main" class="wrap hwrap">
+  <form class="hsearch" role="search" onsubmit="return false">
+    ${figSvg('search', 'hsearch-ic')}
     <label class="skip" for="q">ค้นหา</label>
     <input type="search" id="q" name="q" placeholder="${esc(SITE.searchPlaceholder)}" autocomplete="off">
   </form>
 
-  <h2 class="section-h">${esc(SITE.sectionHeading)}</h2>
-  <ul class="cat-list" id="catList">
+  <div class="hsec" id="catHead">
+    <h2 class="hsec-h">${esc(SITE.sectionHeading)}</h2>
+    <span class="hsec-n">${nCat} หมวด</span>
+  </div>
+  <ul class="hcat-list" id="catList">
 ${catCards || '    <li class="empty">ยังไม่มีหมวด</li>'}
   </ul>
 
   <ul class="cat-list" id="searchResults" hidden></ul>
   <p class="empty" id="searchEmpty" hidden>ไม่พบเนื้อหาที่ค้นหา</p>
 
-  <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
+  <p class="foot hfoot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
 </main>`;
 
 writeFileSync(join(DIST, 'index.html'), layout({ isHome: true, body: homeBody, current: '/' }));

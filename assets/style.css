@@ -17,8 +17,21 @@
   --brand:     #169fa5;
   --ink:       #163a5f;
   --ink-soft:  #60758c;
-  --nav-pill:  #d9f3f1;
+  --nav-pill:  #ddf3ef;
   --line:      #dbe9f2;
+  /* หน้าแรก + แถบเมนู (Figma Rehab-Library-3D 1) */
+  --home-bg:   #f2f9fc;
+  --head-bg:   #e9f7fb;
+  --head-btn:  #ffffff;
+  --accent:    #168d96;
+  --ink-2:     #647d90;
+  --ink-3:     #6b8192;
+  --ink-4:     #78909e;
+  --chev:      #86a1af;
+  --moon:      #486a80;
+  --nav-ink:   #738998;
+  --nav-on:    #13858e;
+  --nav-line:  #e0edf1;
 
   --shadow-card: 0 1px 2px rgb(22 58 95 / .04), 0 4px 16px rgb(22 58 95 / .06);
   --shadow-soft: 0 1px 3px rgb(22 58 95 / .05);
@@ -29,7 +42,7 @@
 
   --w: 430px;            /* ดีไซน์วาดที่ 390 แต่ให้ยืดเต็มจอมือถือจริง */
   --pad: 16px;
-  --nav-h: 64px;
+  --nav-h: 94px;
 
   --font: "Noto Sans Thai", "IBM Plex Sans Thai", -apple-system, BlinkMacSystemFont,
           "Segoe UI", "Helvetica Neue", sans-serif;
@@ -49,6 +62,18 @@
   --ink-soft: #9db4c6;
   --nav-pill: #1d3f42;
   --line:     #24394a;
+  --home-bg:  #0d1720;
+  --head-bg:  #132433;
+  --head-btn: #1b3243;
+  --accent:   #3fc4c9;
+  --ink-2:    #9db4c6;
+  --ink-3:    #9db4c6;
+  --ink-4:    #8aa3b5;
+  --chev:     #7f98a8;
+  --moon:     #cfe3ef;
+  --nav-ink:  #8aa3b5;
+  --nav-on:   #3fc4c9;
+  --nav-line: #24394a;
   --shadow-card: 0 1px 2px rgb(0 0 0 / .3), 0 4px 16px rgb(0 0 0 / .35);
   --shadow-soft: 0 1px 3px rgb(0 0 0 / .3);
 }
@@ -351,53 +376,48 @@ a:hover { text-decoration: underline; }
 .btn-wide { grid-column: 1 / -1; }
 
 /* ---------- แถบเมนูล่าง ---------- */
-/* Figma: แถบสูง 64 ไม่มีเส้นคั่น พื้นขาว
-   ปุ่มที่เลือกเป็นแคปซูล 88x46 ตัวอักษรอยู่กึ่งกลางแนวตั้ง */
+/* Figma "Rehab-Library-3D 1": แถบขาว เส้นบน #E0EDF1 · ไอคอนอยู่บน ป้ายอยู่ล่าง
+   ช่องที่เลือก = แคปซูล 64x32 สี #DDF3EF ครอบไอคอน · ป้ายตัวหนาสี #13858E */
 .tabbar {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   z-index: 20;
   background: var(--surface);
-  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid var(--nav-line);
+  padding-bottom: max(29px, env(safe-area-inset-bottom));
 }
 
-/* Figma: ปุ่มไม่ได้วางกลางช่องเท่ากัน — วัดจากดีไซน์จริง
-   หน้าหลัก x=11 · คลังความรู้ x=108 · บันทึกไว้ x=205 · ติดต่อ x=302
-   = ระยะห่างเท่ากัน 97px เริ่มที่ 11 → ใช้ 4 ช่องเท่ากันแล้วจัดชิดซ้ายในช่อง */
 .tabbar-in {
   display: grid;
-  grid-template-columns: repeat(4, 97px);
-  justify-content: start;
-  align-items: center;
-  height: var(--nav-h);
+  grid-template-columns: repeat(4, 1fr);
   width: 100%;
   max-width: var(--w);
   margin-inline: auto;
-  padding-inline: 11px;
+  padding: 8px 8px 0;
 }
 
-/* ปุ่มพอดีข้อความ ชิดซ้ายในช่องของตัวเอง
-   "คลังความรู้" กว้าง 60 + ขอบข้างละ 14 = แคปซูล 88px ตรงตามดีไซน์ */
 .tab {
-  display: grid;
-  place-items: center;
-  justify-self: start;
-  min-height: 46px;
-  margin-left: -14px;
-  padding: 0 14px;
-  border-radius: var(--r-pill);
-  font-size: 13px;
-  color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  min-height: 48px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--nav-ink);
   font-weight: 400;
   white-space: nowrap;
+  border-radius: 12px;
 }
 .tab:hover { text-decoration: none; }
-
-.tab[aria-current="page"] {
-  background: var(--nav-pill);
-  color: var(--brand);
-  font-weight: 700;
+.tab-ic {
+  display: grid; place-items: center;
+  width: 64px; height: 32px;
+  border-radius: 16px;
 }
+.tab-ic svg { width: auto; height: auto; }
+.tab[aria-current="page"] { color: var(--nav-on); font-weight: 700; }
+.tab[aria-current="page"] .tab-ic { background: var(--nav-pill); }
 
 /* ---------- หน้าบทเรียน ---------- */
 /* Figma: breadcrumb y=84 (ห่างแถบหัว 18) · ชื่อ y=119 · คำบรรยาย y=164 · วิดีโอ y=203 */
@@ -753,3 +773,120 @@ a:hover { text-decoration: underline; }
   background: var(--surface); color: var(--brand); font-size: 20px; box-shadow: var(--shadow-soft);
 }
 .me-txt { font-size: 15px; color: var(--ink-soft); }
+
+
+/* ─────────── หน้าแรก ตาม Figma "Rehab-Library-3D 1" (กรอบ 390) ───────────
+   พื้น #F2F9FC · หัวสูง 112 พื้น #E9F7FB · ปุ่ม 40x40 มุม 14 ที่ x20 y24
+   ช่องค้นหา 350x50 มุม 16 y128 · หัวข้อ y197 · การ์ด 350x84 มุม 18 ห่างกัน 12
+   รูป 3 มิติ 68x68 ห่างขอบการ์ด 8 · ชื่อหมวดที่ x102 (ห่างรูป 6) */
+body:has(.hhead) { background: var(--home-bg); }
+
+.hhead-bg { background: var(--head-bg); padding-top: env(safe-area-inset-top); }
+.hhead {
+  position: relative;
+  max-width: var(--w);
+  margin-inline: auto;
+  height: 112px;
+  text-align: center;
+}
+.hhead-btn {
+  position: absolute;
+  top: 24px;
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border: 0; padding: 0; cursor: pointer;
+  border-radius: 14px;
+  background: var(--head-btn);
+  font-family: inherit;
+}
+.hhead-btn:hover { text-decoration: none; filter: brightness(.98); }
+.hhead-back { left: 20px; color: var(--accent); }
+.hhead-back svg { width: 8.65px; height: 15.65px; }
+.hhead-theme { right: 20px; color: var(--moon); }
+.hhead-theme svg { width: 19px; height: 19.25px; margin-left: 2px; }
+/* เป้ากดเกิน 40px ให้แตะง่ายบนมือถือ โดยไม่ขยายกล่องที่มองเห็น */
+.hhead-btn::after { content: ""; position: absolute; inset: -4px; }
+
+/* Figma วางชื่อ/คำบรรยายเยื้องซ้ายจากกึ่งกลางจอ ~12px (ชื่อ x128 · คำบรรยาย x104) — ทำตามแบบ */
+.hhead-text { padding: 23px 84px 0 60px; }
+.hhead-title {
+  margin: 0;
+  font-size: 24px; font-weight: 700; line-height: 36px;
+  color: var(--ink);
+}
+.hhead-sub {
+  margin: 2px 0 0;
+  font-size: 12px; line-height: 18px;
+  color: var(--ink-2);
+}
+
+.hwrap { padding-inline: 20px; }
+
+.hsearch {
+  display: flex; align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+  height: 50px;
+  padding: 0 16px 0 17px;
+  background: var(--surface);
+  border-radius: 16px;
+}
+.hsearch-ic { flex: none; width: 18.93px; height: 18.93px; color: var(--ink-4); }
+.hsearch input {
+  flex: 1; min-width: 0; height: 100%;
+  border: 0; outline: 0; background: none;
+  font: inherit; font-size: 16px;   /* ≥16px กัน iOS ซูมเอง */
+  color: var(--ink);
+}
+.hsearch input::placeholder { color: var(--ink-4); font-size: 14px; }
+.hsearch:focus-within { box-shadow: 0 0 0 2px var(--accent); }
+
+.hsec {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 19px 0 14px;
+  padding-right: 17px;       /* "8 หมวด" ชิดแนวเดียวกับลูกศรในการ์ด */
+}
+.hsec[hidden] { display: none; }
+.hsec-h { margin: 0; font-size: 20px; font-weight: 700; line-height: 30px; color: var(--ink); }
+.hsec-n { font-size: 12px; line-height: 18px; color: var(--ink-2); }
+
+.hcat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.hcat-list[hidden] { display: none; }
+.hcat {
+  display: flex; align-items: center;
+  height: 84px;
+  padding: 8px 16px 8px 8px;
+  background: var(--surface);
+  border-radius: 18px;
+  color: inherit;
+  transition: transform .15s ease;
+}
+.hcat:hover { text-decoration: none; transform: translateY(-1px); }
+.hcat:active { transform: none; }
+.hcat-img {
+  flex: none;
+  width: 68px; height: 68px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+/* Figma: ชื่อหมวดเริ่ม y+16 จากขอบการ์ด — สูงกว่ากึ่งกลางเล็กน้อย */
+.hcat-body { flex: 1; min-width: 0; margin-left: 6px; margin-bottom: 6px; }
+.hcat-title {
+  display: block;
+  font-size: 17px; font-weight: 700; line-height: 26px;
+  color: var(--ink);
+}
+.hcat-desc {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px; line-height: 17px;
+  color: var(--ink-3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.hcat-chev { flex: none; width: 5.74px; height: 10.24px; color: var(--chev); }
+
+.hfoot { margin: 26px 0 18px; font-size: 11px; color: var(--ink-4); }
+
+@media (min-width: 760px) {
+  .hcat-list { grid-template-columns: 1fr 1fr; }
+}
