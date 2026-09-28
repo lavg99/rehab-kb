@@ -1,4 +1,5 @@
 ---
+hidden: true
 thumb: /assets/dz/daily-living.webp
 tagline: ดูแลตนเองและมีส่วนร่วมกับครอบครัว
 cardSize: 14

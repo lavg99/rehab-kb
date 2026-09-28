@@ -1,4 +1,5 @@
 ---
+hidden: true
 thumb: /assets/dz/energy-conservation.webp
 tagline: การเคลื่อนไหวและการพักอย่างเหมาะสม
 title: กิจกรรมในชีวิตประจำวัน

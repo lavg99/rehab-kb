@@ -216,9 +216,11 @@ const pages = files.map(f => {
     listAs: typeof meta.list === 'string' ? meta.list : '',
     steps,
     order: Number(meta.order ?? 999),
+    hidden: meta.hidden === true || meta.hidden === 'true',
     html: md(body),
   };
-}).sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, 'th'));
+}).filter(p => !p.hidden)  // hidden: true = เอาออกจากเว็บ (ไฟล์เนื้อหายังเก็บไว้ เปิดคืนได้)
+  .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, 'th'));
 
 const coverHtml = (p) => {
   if (!p.coverImage) return '';

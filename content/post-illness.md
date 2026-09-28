@@ -1,4 +1,5 @@
 ---
+hidden: true
 thumb: /assets/dz/post-illness.webp
 tagline: การเคลื่อนไหวและความทนทาน
 title: การฟื้นฟูหลังเจ็บป่วย

@@ -1,4 +1,5 @@
 ---
+hidden: true
 thumb: /assets/dz/symptom-monitoring.webp
 tagline: เตรียมข้อมูลเพื่อพูดคุยกับทีมดูแล
 cardSize: 14
