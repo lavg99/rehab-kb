@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/milestones.webp
 title: คอเอียงแต่กำเนิด
 summary: ทารกเอียงคอไปข้างหนึ่ง หันหน้าไปอีกข้าง
 type: disease

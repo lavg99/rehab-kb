@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/breathing.webp
 title: โรคหืด (หอบหืด)
 summary: หลอดลมไวต่อสิ่งกระตุ้น หายใจมีเสียงวี้ด หอบเป็นพัก ๆ
 type: disease

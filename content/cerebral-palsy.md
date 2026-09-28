@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/motor-delay.webp
 title: สมองพิการ (ซีพี)
 summary: กล้ามเนื้อเกร็งหรืออ่อนแรง เคลื่อนไหวผิดปกติตั้งแต่เด็ก
 type: disease

@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/muscle-strain.webp
 title: ปวดเข่าด้านหน้า
 summary: ปวดรอบลูกสะบ้า เวลาวิ่ง ขึ้นลงบันได หรือนั่งยอง
 type: disease

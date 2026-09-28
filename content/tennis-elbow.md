@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/overuse-injury.webp
 title: ข้อศอกด้านนอกอักเสบ (เทนนิสเอลโบว์)
 summary: ปวดข้อศอกด้านนอก เวลาบิด จับ ยก
 type: disease

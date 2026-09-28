@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/wrist-hand-pain.webp
 title: พังผืดกดทับเส้นประสาทข้อมือ
 summary: ชานิ้วโป้ง ชี้ กลาง โดยเฉพาะตอนกลางคืน
 type: disease

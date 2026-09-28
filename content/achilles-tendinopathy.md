@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/ankle-sprain.webp
 title: เอ็นร้อยหวายอักเสบ
 summary: ปวดเอ็นเหนือส้นเท้า ตึงตอนเช้า
 type: disease

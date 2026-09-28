@@ -1193,3 +1193,6 @@ body:has(.ch-head) { background: var(--home-bg); }
   background: none; border: 0; padding: 8px 0; font: inherit; font-weight: 700; cursor: pointer;
 }
 @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+
+/* หัวบทความ: ใช้รูป 3 มิติแทนไอคอน */
+.dz-ic.dz-thumb { object-fit: cover; padding: 0; }

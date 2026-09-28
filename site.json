@@ -70,7 +70,8 @@
       "mediaTitle": "สื่อการเรียนรู้",
       "listTitle": "อาการบาดเจ็บและการฟื้นตัว",
       "listSize": 19,
-      "searchHint": "ค้นหาอาการหรือหัวข้อการฟื้นฟู"
+      "searchHint": "ค้นหาอาการหรือหัวข้อการฟื้นฟู",
+      "homeHidden": true
     },
     {
       "slug": "office",
@@ -83,7 +84,8 @@
       "mediaTitle": "สื่อการเรียนรู้",
       "listTitle": "อาการและการดูแลในวัยทำงาน",
       "listSize": 19,
-      "searchHint": "ค้นหาอาการหรือหัวข้อการดูแล"
+      "searchHint": "ค้นหาอาการหรือหัวข้อการดูแล",
+      "homeHidden": true
     },
     {
       "slug": "child",
@@ -97,7 +99,8 @@
       "mediaTitle": "สื่อการเรียนรู้",
       "listTitle": "พัฒนาการและการเคลื่อนไหว",
       "listSize": 19,
-      "searchHint": "ค้นหาหัวข้อพัฒนาการเด็ก"
+      "searchHint": "ค้นหาหัวข้อพัฒนาการเด็ก",
+      "homeHidden": true
     },
     {
       "slug": "women",
@@ -111,7 +114,8 @@
       "mediaTitle": "สื่อการเรียนรู้",
       "listTitle": "การดูแลในแต่ละช่วง",
       "listSize": 19,
-      "searchHint": "ค้นหาหัวข้อการดูแลสุขภาพ"
+      "searchHint": "ค้นหาหัวข้อการดูแลสุขภาพ",
+      "homeHidden": true
     }
   ],
   "nav": [

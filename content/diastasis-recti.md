@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/postpartum-recovery.webp
 title: กล้ามเนื้อหน้าท้องแยกหลังคลอด
 summary: หน้าท้องป่องตรงกลาง เวลาเกร็งท้องเห็นเป็นร่อง
 type: disease

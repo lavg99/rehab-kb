@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/ligament-injury.webp
 title: เอ็นไขว้หน้าเข่าฉีก
 summary: เข่าบิดแล้วมีเสียงดัง บวมเร็ว เข่าทรุด
 type: disease

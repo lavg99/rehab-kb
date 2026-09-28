@@ -230,7 +230,9 @@ const coverHtml = (p) => {
 
 // ---------- หน้าแรก ----------
 function iconSrc(name) { return u(`/assets/icons/${name}.svg`); }
-const catCards = (SITE.categories || []).map(c => {
+// homeHidden: ไม่แสดงในหน้าแรก (หน้าหมวดยังอยู่ เข้าได้จากเมนูบทความ)
+const homeCats = (SITE.categories || []).filter(c => !c.homeHidden);
+const catCards = homeCats.map(c => {
   const n = pages.filter(p => p.category === c.slug).length;
   const first = pages.find(p => p.category === c.slug);
   const href = n === 1 && first ? u(`/a/${first.slug}.html`) : u(`/c/${c.slug}.html`);
@@ -246,7 +248,7 @@ const catCards = (SITE.categories || []).map(c => {
     </li>`;
 }).join('\n');
 
-const nCat = (SITE.categories || []).length;
+const nCat = homeCats.length;
 const homeBody = `<div class="hhead-bg">
 <header class="hhead">
   <div class="hhead-text">
@@ -310,7 +312,8 @@ ${p.refs.map(x => `      <li>${esc(x)}</li>`).join('\n')}
 
 const listCard = (p) => `    <li>
       <a class="cat" href="${u(`/a/${esc(p.slug)}.html`)}">
-        ${p.icon ? `<span class="cat-img cat-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="56" height="56"></span>`
+        ${p.thumb ? `<img class="cat-img" src="${esc(u(p.thumb))}" alt="" loading="lazy" decoding="async" width="110" height="102">`
+          : p.icon ? `<span class="cat-img cat-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="56" height="56"></span>`
           : p.cover ? `<img class="cat-img" src="${esc(u(p.cover))}" alt="" loading="lazy" decoding="async" width="110" height="102">` : ''}
         <span class="cat-body">
           <span class="cat-title">${esc(p.title)}</span>
@@ -339,7 +342,8 @@ function diseaseBody(p, cat, crumb) {
 <main id="main" class="wrap">
   <p class="crumb">${crumb}</p>
   <div class="dz-hero">
-    ${p.icon ? `<span class="dz-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="64" height="64"></span>` : ''}
+    ${p.thumb ? `<img class="dz-ic dz-thumb" src="${esc(u(p.thumb))}" alt="" width="84" height="84" decoding="async">`
+      : p.icon ? `<span class="dz-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="64" height="64"></span>` : ''}
     <div>
       <h2 class="lesson-title">${esc(p.title)}</h2>
       ${p.summary ? `<p class="lesson-sub">${esc(p.summary)}</p>` : ''}
@@ -765,7 +769,7 @@ ${pages.map(p => `    <li class="qr-card">
 
 // ---------- ดัชนีค้นหา ----------
 writeFileSync(join(DIST, 'search.json'), JSON.stringify(
-  pages.map(p => ({ t: p.title, s: p.summary, u: u(`/a/${p.slug}.html`), i: p.icon ? iconSrc(p.icon) : (p.cover ? u(p.cover) : ''), ic: p.icon ? 1 : 0,
+  pages.map(p => ({ t: p.title, s: p.summary, u: u(`/a/${p.slug}.html`), i: p.thumb ? u(p.thumb) : p.icon ? iconSrc(p.icon) : (p.cover ? u(p.cover) : ''), ic: !p.thumb && p.icon ? 1 : 0,
     k: p.slug, th: p.thumb ? u(p.thumb) : '', c: ((SITE.categories || []).find(c => c.slug === p.category) || {}).title || '' })),
 ));
 

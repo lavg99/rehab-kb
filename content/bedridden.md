@@ -1,4 +1,5 @@
 ---
+thumb: /assets/dz/daily-living.webp
 title: ผู้ป่วยติดเตียง และแผลกดทับ
 summary: ดูแลผู้ป่วยที่ลุกเองไม่ได้ ป้องกันแผลกดทับและข้อติด
 type: disease
