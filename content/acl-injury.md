@@ -4,7 +4,7 @@ summary: เข่าบิดแล้วมีเสียงดัง บว�
 type: disease
 category: sports
 icon: leg
-order: 2
+order: 8
 youtube: 
 related:
 reviewer: 

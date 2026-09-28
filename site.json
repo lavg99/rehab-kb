@@ -63,7 +63,14 @@
       "slug": "sports",
       "title": "บาดเจ็บจากกีฬา",
       "desc": "ข้อเท้าแพลง เอ็นฉีก และการฟื้นตัว",
-      "image": "/assets/cat3d/sports.webp"
+      "image": "/assets/cat3d/sports.webp",
+      "heroTitle": "ฟื้นตัวอย่างเข้าใจ\nเคลื่อนไหวมั่นใจ",
+      "heroText": "ข้อเท้าแพลง เอ็นฉีก\nและการฟื้นตัว",
+      "heroImage": "/assets/hero/sports.webp",
+      "mediaTitle": "สื่อการเรียนรู้",
+      "listTitle": "อาการบาดเจ็บและการฟื้นตัว",
+      "listSize": 19,
+      "searchHint": "ค้นหาอาการหรือหัวข้อการฟื้นฟู"
     },
     {
       "slug": "office",

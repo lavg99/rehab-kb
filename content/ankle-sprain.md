@@ -1,4 +1,6 @@
 ---
+thumb: /assets/dz/ankle-sprain.webp
+tagline: เรียนรู้เรื่องข้อเท้าและการฟื้นฟู
 title: ข้อเท้าแพลง
 summary: เจ็บ บวมข้อเท้าหลังพลิก พบบ่อยในการวิ่งและฝึก
 type: disease

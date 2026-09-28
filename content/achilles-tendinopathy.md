@@ -4,7 +4,7 @@ summary: ปวดเอ็นเหนือส้นเท้า ตึงต�
 type: disease
 category: sports
 icon: foot
-order: 4
+order: 10
 youtube: 
 related:
 reviewer: 

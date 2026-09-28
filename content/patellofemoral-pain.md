@@ -4,7 +4,7 @@ summary: ปวดรอบลูกสะบ้า เวลาวิ่ง ข
 type: disease
 category: sports
 icon: running
-order: 3
+order: 9
 youtube: 
 related:
   - knee-exercise
