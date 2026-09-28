@@ -45,8 +45,10 @@
   --pad: 16px;
   --nav-h: 94px;
 
-  --font: "Noto Sans Thai", "IBM Plex Sans Thai", -apple-system, BlinkMacSystemFont,
-          "Segoe UI", "Helvetica Neue", sans-serif;
+  /* ฟอนต์แบบ iPhone: iPhone/iPad/Mac ใช้ฟอนต์ระบบของเครื่องเอง (SF + ไทย Thonburi)
+     เครื่องอื่นที่ไม่มีฟอนต์นี้ ใช้ Inter + Noto Sans Thai Looped (หน้าตาใกล้เคียง ฟรี) */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", Thonburi,
+          "Inter", "Noto Sans Thai Looped", "Segoe UI", sans-serif;
 
   accent-color: var(--brand);
 }

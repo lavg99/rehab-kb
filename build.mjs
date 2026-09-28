@@ -159,7 +159,7 @@ ${SITE.ogImage ? `<meta property="og:image" content="${esc(SITE.ogImage)}">` : '
 <meta name="theme-color" content="${esc(SITE.themeColor)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Thai+Looped:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="${u('/assets/style.css')}">
 ${noindex ? '<meta name="robots" content="noindex">' : ''}
 </head>
