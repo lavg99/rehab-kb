@@ -131,7 +131,7 @@
 
         results.innerHTML = hit.map(x => `<li>
           <a class="cat" href="${x.u}">
-            ${x.i ? `<img class="cat-img" src="${x.i}" alt="" loading="lazy">` : ''}
+            ${x.i ? (x.ic ? `<span class="cat-img cat-ic"><img src="${x.i}" alt="" width="56" height="56"></span>` : `<img class="cat-img" src="${x.i}" alt="" loading="lazy">`) : ''}
             <span class="cat-body">
               <span class="cat-title">${escapeHtml(x.t)}</span>
               ${x.s ? `<span class="cat-desc">${escapeHtml(x.s)}</span>` : ''}

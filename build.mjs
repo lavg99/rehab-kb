@@ -198,6 +198,11 @@ const pages = files.map(f => {
     refs: Array.isArray(meta.refs) ? meta.refs.filter(Boolean) : (meta.refs ? [meta.refs] : []),
     reviewer: typeof meta.reviewer === 'string' ? meta.reviewer : '',
     reviewed: typeof meta.reviewed === 'string' ? meta.reviewed : '',
+    // หน้าโรค: type: disease + ไอคอน + วิดีโอ YouTube + บทความที่เกี่ยวข้อง
+    type: meta.type || 'article',
+    icon: typeof meta.icon === 'string' ? meta.icon : '',
+    youtube: typeof meta.youtube === 'string' ? meta.youtube : '',
+    related: Array.isArray(meta.related) ? meta.related.filter(Boolean) : [],
     steps,
     order: Number(meta.order ?? 999),
     html: md(body),
@@ -253,6 +258,86 @@ writeFileSync(join(DIST, 'index.html'), layout({ isHome: true, body: homeBody, c
 // ---------- หน้าบทเรียน ----------
 mkdirSync(join(DIST, 'c'), { recursive: true });
 
+const iconSrc = (name) => u(`/assets/icons/${name}.svg`);
+const ytId = (s = '') => (s.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/) || s.match(/^([\w-]{11})$/) || [])[1] || '';
+
+const feedbackHtml = (p) => `<section class="feedback" data-fb="${esc(p.slug)}" aria-labelledby="fb-h-${esc(p.slug)}">
+    <h3 class="fb-h" id="fb-h-${esc(p.slug)}">อ่านแล้วเข้าใจไหม</h3>
+    <p class="fb-sub">แตะ 1 ครั้ง ช่วยให้แผนกปรับปรุงเนื้อหา</p>
+    <div class="fb-row">
+${FB_SCALE.map(f => `      <button type="button" class="fb-btn" data-score="${f.v}" aria-label="${esc(f.label)}"><span class="fb-face" aria-hidden="true">${f.face}</span><span class="fb-lbl">${esc(f.label)}</span></button>`).join('\n')}
+    </div>
+    <p class="fb-thanks" hidden>ขอบคุณสำหรับความเห็น</p>
+  </section>`;
+
+const refsHtml = (p) => `${p.refs.length ? `<section class="refs">
+    <h3 class="refs-h">แหล่งอ้างอิง</h3>
+    <ol>
+${p.refs.map(x => `      <li>${esc(x)}</li>`).join('\n')}
+    </ol>
+  </section>` : ''}
+  ${p.reviewer || p.reviewed ? `<p class="reviewed">${p.reviewer ? `ตรวจเนื้อหาโดย ${esc(p.reviewer)}` : ''}${p.reviewer && p.reviewed ? ' · ' : ''}${p.reviewed ? `ปรับปรุงล่าสุด ${esc(p.reviewed)}` : ''}</p>` : ''}`;
+
+const listCard = (p) => `    <li>
+      <a class="cat" href="${u(`/a/${esc(p.slug)}.html`)}">
+        ${p.icon ? `<span class="cat-img cat-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="56" height="56"></span>`
+          : p.cover ? `<img class="cat-img" src="${esc(u(p.cover))}" alt="" loading="lazy" decoding="async" width="110" height="102">` : ''}
+        <span class="cat-body">
+          <span class="cat-title">${esc(p.title)}</span>
+          ${p.summary ? `<span class="cat-desc">${esc(p.summary)}</span>` : ''}
+        </span>
+        <span class="cat-chev" aria-hidden="true">›</span>
+      </a>
+    </li>`;
+
+function diseaseBody(p, cat, crumb) {
+  const id = ytId(p.youtube);
+  const video = id
+    ? `<div class="media video"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0" title="วิดีโอ ${esc(p.title)}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+    : `<div class="media media-empty" role="img" aria-label="วิดีโอกำลังจัดทำ"><span class="me-play" aria-hidden="true">▶</span><span class="me-txt">วิดีโอสาธิตกำลังจัดทำ</span></div>`;
+  const rel = p.related.map(s => pages.find(x => x.slug === s)).filter(Boolean);
+  return `<div class="topbar-tint">
+  <header class="topbar">
+    <a class="back-btn" href="${u(cat ? `/c/${cat.slug}.html` : '/')}" aria-label="ย้อนกลับ">‹</a>
+    <div class="head-text left">
+      <h1 class="head-title sm">${esc(cat ? cat.title : 'โรคและอาการ')}</h1>
+    </div>
+  </header>
+</div>
+
+<main id="main" class="wrap">
+  <p class="crumb">${crumb}</p>
+  <div class="dz-hero">
+    ${p.icon ? `<span class="dz-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="64" height="64"></span>` : ''}
+    <div>
+      <h2 class="lesson-title">${esc(p.title)}</h2>
+      ${p.summary ? `<p class="lesson-sub">${esc(p.summary)}</p>` : ''}
+    </div>
+  </div>
+
+  <h3 class="dz-h">วิดีโอแนะนำ</h3>
+  ${video}
+
+  <div class="prose dz-prose">${p.html}</div>
+
+  ${rel.length ? `<h3 class="dz-h">ท่าบริหารที่เกี่ยวข้อง</h3>
+  <ul class="cat-list">
+${rel.map(listCard).join('\n')}
+  </ul>` : ''}
+
+  ${feedbackHtml(p)}
+
+  <div class="btn-row">
+    <button type="button" class="btn" data-save="${esc(p.slug)}">บันทึกไว้อ่าน</button>
+    <a class="btn btn-primary" href="${u('/contact.html')}">สอบถามแผนก</a>
+  </div>
+
+  ${refsHtml(p)}
+
+  <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
+</main>`;
+}
+
 for (const p of pages) {
   const cat = (SITE.categories || []).find(c => c.slug === p.category);
   const crumb = [`<a href="${u('/')}">หน้าหลัก</a>`, cat ? `<a href="${u(`/c/${cat.slug}.html`)}">${esc(cat.title)}</a>` : '', esc(p.categoryTitle || p.title)]
@@ -281,7 +366,7 @@ ${p.steps.map(s => `    <li class="step">
     <div class="prose">${p.html}</div>
   </div>` : `${stepsHtml}${p.html ? `<div class="prose">${p.html}</div>` : ''}`;
 
-  const body = `<div class="topbar-tint">
+  const body = p.type === 'disease' ? diseaseBody(p, cat, crumb) : `<div class="topbar-tint">
   <header class="topbar">
     <a class="back-btn" href="${u('/')}" aria-label="ย้อนกลับ">‹</a>
     <div class="head-text left">
@@ -349,7 +434,18 @@ const groups = [
 ];
 
 for (const g of groups) {
-  const items = g.list.map(p => `    <li>
+  const dz = g.list.filter(p => p.type === 'disease');
+  const other = g.list.filter(p => p.type !== 'disease');
+  const dzHtml = dz.length ? `<h3 class="dz-h">โรคและอาการ</h3>
+  <ul class="dz-grid">
+${dz.map(p => `    <li><a class="dz-card" href="${u(`/a/${esc(p.slug)}.html`)}">
+      <span class="dz-ic">${p.icon ? `<img src="${esc(iconSrc(p.icon))}" alt="" width="52" height="52">` : ''}</span>
+      <span class="dz-name">${esc(p.title)}</span>
+      ${p.summary ? `<span class="dz-sum">${esc(p.summary)}</span>` : ''}
+    </a></li>`).join('\n')}
+  </ul>
+  ${other.length ? '<h3 class="dz-h">ท่าบริหารและบทความ</h3>' : ''}` : '';
+  const items = other.map(p => `    <li>
       <a class="cat" href="${u(`/a/${esc(p.slug)}.html`)}">
         ${p.cover ? `<img class="cat-img" src="${esc(u(p.cover))}" alt="" loading="lazy" decoding="async" width="110" height="102">` : ''}
         <span class="cat-body">
@@ -371,9 +467,10 @@ for (const g of groups) {
   <p class="crumb"><a href="${u('/')}">หน้าหลัก</a> › ${esc(g.title)}</p>
   <h2 class="lesson-title">${esc(g.title)}</h2>
   <p class="lesson-sub">${esc(g.desc)}</p>
-  <ul class="cat-list" style="margin-top:20px">
-${items || '    <li class="empty">ยังไม่มีเนื้อหาในหมวดนี้</li>'}
-  </ul>
+  ${dzHtml}
+  ${items ? `<ul class="cat-list" style="margin-top:${dz.length ? 12 : 20}px">
+${items}
+  </ul>` : (dz.length ? '' : '<ul class="cat-list" style="margin-top:20px"><li class="empty">ยังไม่มีเนื้อหาในหมวดนี้</li></ul>')}
   <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
 </main>`;
 
@@ -492,11 +589,16 @@ ${pages.map(p => `    <li class="qr-card">
 
 // ---------- ดัชนีค้นหา ----------
 writeFileSync(join(DIST, 'search.json'), JSON.stringify(
-  pages.map(p => ({ t: p.title, s: p.summary, u: u(`/a/${p.slug}.html`), i: p.cover ? u(p.cover) : '' })),
+  pages.map(p => ({ t: p.title, s: p.summary, u: u(`/a/${p.slug}.html`), i: p.icon ? iconSrc(p.icon) : (p.cover ? u(p.cover) : ''), ic: p.icon ? 1 : 0 })),
 ));
 
 // ---------- assets + manifest ----------
 cpSync(join(ROOT, 'assets'), join(DIST, 'assets'), { recursive: true });
+// ไอคอนโรคใช้ผ่าน <img> — currentColor ไม่ทำงานใน <img> จึงใส่สีแบรนด์ลงไฟล์ตอน build
+for (const f of readdirSync(join(DIST, 'assets', 'icons')).filter(f => f.endsWith('.svg'))) {
+  const fp = join(DIST, 'assets', 'icons', f);
+  writeFileSync(fp, readFileSync(fp, 'utf8').replaceAll('currentColor', SITE.themeColor || '#169fa5').replace('width="1em" height="1em" ', ''));
+}
 writeFileSync(join(DIST, 'manifest.webmanifest'), JSON.stringify({
   name: `${SITE.title} · ${SITE.org}`, short_name: SITE.shortName,
   start_url: u('/') || '/', display: 'standalone',
