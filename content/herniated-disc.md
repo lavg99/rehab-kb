@@ -1,4 +1,6 @@
 ---
+tagline: กระดูกสันหลังและเส้นประสาท
+thumb: /assets/dz/herniated-disc.webp
 title: หมอนรองกระดูกทับเส้นประสาท
 summary: ปวดหลังร้าวลงขา ชา หรือขาอ่อนแรง
 type: disease

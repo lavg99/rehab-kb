@@ -1,4 +1,6 @@
 ---
+tagline: รู้จักอาการปวดหลัง
+thumb: /assets/dz/low-back-pain.webp
 title: ปวดหลังส่วนล่าง
 summary: ปวดเมื่อยบริเวณเอว มักเกิดจากกล้ามเนื้อและท่าทาง
 type: disease

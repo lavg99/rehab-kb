@@ -206,6 +206,8 @@ const pages = files.map(f => {
     icon: typeof meta.icon === 'string' ? meta.icon : '',
     youtube: typeof meta.youtube === 'string' ? meta.youtube : '',
     related: Array.isArray(meta.related) ? meta.related.filter(Boolean) : [],
+    tagline: typeof meta.tagline === 'string' ? meta.tagline : '',
+    thumb: typeof meta.thumb === 'string' ? meta.thumb : '',
     steps,
     order: Number(meta.order ?? 999),
     html: md(body),
@@ -436,50 +438,68 @@ ${p.refs.map(x => `      <li>${esc(x)}</li>`).join('\n')}
 
 // ---------- หน้ารวมของแต่ละหมวด ----------
 const groups = [
-  ...(SITE.categories || []).map(c => ({ slug: c.slug, title: c.title, desc: c.desc, list: pages.filter(p => p.category === c.slug) })),
+  ...(SITE.categories || []).map(c => ({ slug: c.slug, title: c.title, desc: c.desc, cat: c, list: pages.filter(p => p.category === c.slug) })),
   { slug: 'article', title: 'บทความ', desc: 'บทความทั้งหมด', list: pages.filter(p => !p.video) },
   { slug: 'video', title: 'วิดีโอท่าบริหาร', desc: 'สื่อวิดีโอสาธิต', list: pages.filter(p => !!p.video) },
 ];
 
+// หน้าหมวด ตาม Figma "Bone-Conditions 1": หัวสูง 64 · การ์ดแนะนำหมวด · ค้นหาในหมวด · รายชื่อโรคมีรูป
+const thumbHtml = (p, w, h) => p.thumb
+  ? `<img class="cc-img" src="${esc(u(p.thumb))}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async">`
+  : p.icon ? `<span class="cc-img cc-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="40" height="40"></span>`
+  : p.cover ? `<img class="cc-img" src="${esc(u(p.cover))}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async">`
+  : `<span class="cc-img cc-ic"></span>`;
+const condCard = (p, big = false) => `    <li data-q="${esc((p.title + ' ' + (p.tagline || '') + ' ' + (p.summary || '')).toLowerCase())}">
+      <a class="cc${big ? ' cc-big' : ''}" href="${u(`/a/${esc(p.slug)}.html`)}">
+        ${big ? thumbHtml(p, 94, 70) : thumbHtml(p, 78, 66)}
+        <span class="cc-body">
+          <span class="cc-title${!big && [...p.title].length > 24 ? ' is-long' : ''}">${esc(p.title)}</span>
+          <span class="cc-desc">${esc(p.tagline || p.summary)}</span>
+        </span>
+        ${figSvg('chev-right', 'cc-chev')}
+      </a>
+    </li>`;
+
 for (const g of groups) {
   const dz = g.list.filter(p => p.type === 'disease');
   const other = g.list.filter(p => p.type !== 'disease');
-  const dzHtml = dz.length ? `<h3 class="dz-h">โรคและอาการ</h3>
-  <ul class="dz-grid">
-${dz.map(p => `    <li><a class="dz-card" href="${u(`/a/${esc(p.slug)}.html`)}">
-      <span class="dz-ic">${p.icon ? `<img src="${esc(iconSrc(p.icon))}" alt="" width="52" height="52">` : ''}</span>
-      <span class="dz-name">${esc(p.title)}</span>
-      ${p.summary ? `<span class="dz-sum">${esc(p.summary)}</span>` : ''}
-    </a></li>`).join('\n')}
-  </ul>
-  ${other.length ? '<h3 class="dz-h">ท่าบริหารและบทความ</h3>' : ''}` : '';
-  const items = other.map(p => `    <li>
-      <a class="cat" href="${u(`/a/${esc(p.slug)}.html`)}">
-        ${p.cover ? `<img class="cat-img" src="${esc(u(p.cover))}" alt="" loading="lazy" decoding="async" width="110" height="102">` : ''}
-        <span class="cat-body">
-          <span class="cat-title">${esc(p.title)}</span>
-          ${p.summary ? `<span class="cat-desc">${esc(p.summary)}</span>` : ''}
-        </span>
-        <span class="cat-chev" aria-hidden="true">›</span>
-      </a>
-    </li>`).join('\n');
+  const c = g.cat || {};
+  const hero = `<section class="ch-hero">
+    <div class="ch-hero-text">
+      <h2 class="ch-hero-h">${esc(c.heroTitle || g.title)}</h2>
+      <p class="ch-hero-p">${(c.heroText || g.desc).split('\n').map(esc).join('<br>')}</p>
+    </div>
+    ${c.heroImage || c.image ? `<img class="ch-hero-img${c.heroImage ? '' : ' is-thumb'}" src="${esc(u(c.heroImage || c.image))}" alt="" width="113" height="142" decoding="async">` : ''}
+  </section>`;
+  const search = g.list.length > 3 ? `<form class="ch-search" role="search" onsubmit="return false">
+    ${figSvg('search', 'ch-search-ic')}
+    <label class="skip" for="cq">ค้นหาโรคหรืออาการ</label>
+    <input type="search" id="cq" placeholder="ค้นหาโรคหรืออาการ" autocomplete="off" data-filter="#condList li, #artList li">
+  </form>` : '';
 
-  const body = `<div class="topbar-tint">
-  <header class="topbar">
-    <a class="back-btn" href="${u('/')}" aria-label="ย้อนกลับ">‹</a>
-    <div class="head-text left"><h1 class="head-title sm">${esc(g.title)}</h1></div>
+  const body = `<div class="ch-head-bg">
+  <header class="ch-head">
+    <a class="ch-back" href="${u('/')}" aria-label="กลับหน้าหลัก">${figSvg('chev-left')}</a>
+    <h1 class="ch-title">${esc(g.title)}</h1>
+    <a class="ch-saved" href="${u('/saved.html')}" aria-label="ดูที่บันทึกไว้">${figSvg('nav-bookmark')}</a>
   </header>
 </div>
 
-<main id="main" class="wrap">
-  <p class="crumb"><a href="${u('/')}">หน้าหลัก</a> › ${esc(g.title)}</p>
-  <h2 class="lesson-title">${esc(g.title)}</h2>
-  <p class="lesson-sub">${esc(g.desc)}</p>
-  ${dzHtml}
-  ${items ? `<ul class="cat-list" style="margin-top:${dz.length ? 12 : 20}px">
-${items}
-  </ul>` : (dz.length ? '' : '<ul class="cat-list" style="margin-top:20px"><li class="empty">ยังไม่มีเนื้อหาในหมวดนี้</li></ul>')}
-  <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
+<main id="main" class="wrap ch-wrap">
+  <p class="ch-crumb"><a href="${u('/')}">คลังความรู้</a> / ${esc(g.title)}</p>
+  ${g.cat ? hero : ''}
+  ${search}
+  ${dz.length ? `<h2 class="ch-h">โรคและอาการ</h2>
+  <ul class="cc-list" id="condList">
+${dz.map(p => condCard(p)).join('\n')}
+  </ul>` : ''}
+  ${other.length ? `<h2 class="ch-h ch-h-art">ท่าบริหารและบทความ</h2>
+  <ul class="cc-list" id="artList">
+${other.map(p => condCard(p, true)).join('\n')}
+  </ul>` : ''}
+  ${g.list.length ? '' : '<p class="empty">ยังไม่มีเนื้อหาในหมวดนี้</p>'}
+  <p class="empty" id="cqEmpty" hidden>ไม่พบโรคหรืออาการที่ค้นหา</p>
+  <p class="foot ch-foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
 </main>`;
 
   writeFileSync(join(DIST, 'c', `${g.slug}.html`), layout({ title: g.title, desc: g.desc, body, current: '/' }));

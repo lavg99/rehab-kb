@@ -1,4 +1,6 @@
 ---
+tagline: ความแข็งแรงของกระดูก
+thumb: /assets/dz/osteoporosis.webp
 title: กระดูกพรุน
 summary: กระดูกบางและเปราะ หักง่ายเมื่อหกล้ม
 type: disease

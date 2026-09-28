@@ -19,7 +19,10 @@
       "slug": "bone",
       "title": "ระบบกระดูก",
       "desc": "กระดูก ข้อต่อ และกล้ามเนื้อ",
-      "image": "/assets/cat3d/bone.webp"
+      "image": "/assets/cat3d/bone.webp",
+      "heroTitle": "ดูแลกระดูกและข้อต่อ",
+      "heroText": "เรียนรู้ เข้าใจ และฟื้นฟู\nอย่างเหมาะสม",
+      "heroImage": "/assets/hero/bone.webp"
     },
     {
       "slug": "neuro",

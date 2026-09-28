@@ -1,4 +1,6 @@
 ---
+tagline: อาการปวดบริเวณส้นเท้า
+thumb: /assets/dz/plantar-fasciitis.webp
 title: รองช้ำ
 summary: ปวดส้นเท้า โดยเฉพาะก้าวแรกตอนตื่นนอน
 type: disease

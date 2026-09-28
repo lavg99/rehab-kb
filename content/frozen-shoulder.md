@@ -1,4 +1,6 @@
 ---
+tagline: การเคลื่อนไหวของข้อไหล่
+thumb: /assets/dz/frozen-shoulder.webp
 title: ข้อไหล่ติด
 summary: ไหล่ปวดและยกแขนได้น้อยลงเรื่อย ๆ
 type: disease

@@ -1,4 +1,6 @@
 ---
+tagline: สื่อประกอบคำแนะนำจากนักกายภาพบำบัด
+thumb: /assets/dz/knee-exercise.webp
 title: เรียนรู้ท่าบริหารข้อเข่า
 summary: สื่อประกอบคำแนะนำจากนักกายภาพบำบัด
 categoryTitle: ข้อเข่า

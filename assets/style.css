@@ -32,6 +32,7 @@
   --nav-ink:   #738998;
   --nav-on:    #13858e;
   --nav-line:  #e0edf1;
+  --hero-bg:   #def4f7;
 
   --shadow-card: 0 1px 2px rgb(22 58 95 / .04), 0 4px 16px rgb(22 58 95 / .06);
   --shadow-soft: 0 1px 3px rgb(22 58 95 / .05);
@@ -74,6 +75,7 @@
   --nav-ink:  #8aa3b5;
   --nav-on:   #3fc4c9;
   --nav-line: #24394a;
+  --hero-bg:  #16323a;
   --shadow-card: 0 1px 2px rgb(0 0 0 / .3), 0 4px 16px rgb(0 0 0 / .35);
   --shadow-soft: 0 1px 3px rgb(0 0 0 / .3);
 }
@@ -889,4 +891,118 @@ body:has(.hhead) { background: var(--home-bg); }
 
 @media (min-width: 760px) {
   .hcat-list { grid-template-columns: 1fr 1fr; }
+}
+
+
+/* ─────────── หน้าหมวด ตาม Figma "Bone-Conditions 1" (กรอบ 390) ───────────
+   หัวสูง 64 พื้น #E9F7FB · ลูกศร x24 · ชื่อ 22px x52 · ที่คั่นหน้า x356
+   พาธ y78 · การ์ดแนะนำ 358x142 มุม 18 #DEF4F7 รูปขวา 113 · ค้นหา 358x48 มุมมน 24
+   หัวข้อ 21px y345 · การ์ดโรค 358x82 มุม 18 ห่าง 12 รูป 78x66 · บทความ 358x86 รูป 94x70 */
+body:has(.ch-head) { background: var(--home-bg); }
+.ch-head-bg { background: var(--head-bg); padding-top: env(safe-area-inset-top); }
+.ch-head {
+  position: relative;
+  max-width: var(--w); margin-inline: auto;
+  height: 64px;
+  display: flex; align-items: center;
+}
+.ch-back, .ch-saved {
+  position: absolute; top: 10px;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  color: var(--accent); border-radius: 12px;
+}
+.ch-back { left: 5px; }
+.ch-back svg { width: 8.65px; height: 15.65px; }
+.ch-saved { right: 3px; }
+.ch-saved svg { width: 13.65px; height: 20.65px; }
+.ch-back:hover, .ch-saved:hover { background: rgb(22 141 150 / .08); text-decoration: none; }
+.ch-title {
+  margin: 0 0 0 52px;
+  font-size: 22px; font-weight: 700; line-height: 33px;
+  color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: calc(100% - 110px);
+}
+
+.ch-wrap { padding-inline: 16px; }
+.ch-crumb { margin: 14px 0 0 4px; font-size: 12px; line-height: 18px; color: var(--ink-2); }
+.ch-crumb a { color: inherit; }
+
+.ch-hero {
+  position: relative;
+  display: flex; align-items: center;
+  margin-top: 17px;
+  min-height: 142px;
+  background: var(--hero-bg);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.ch-hero-text { flex: 1; min-width: 0; padding: 22px 12px 22px 16px; }
+.ch-hero-h { margin: 0; font-size: 20px; font-weight: 700; line-height: 30px; color: var(--ink); }
+.ch-hero-p { margin: 10px 0 0; font-size: 14px; line-height: 22px; color: var(--ink-2); }
+.ch-hero-img { flex: none; align-self: stretch; width: 113px; height: auto; object-fit: cover; }
+.ch-hero-img.is-thumb { align-self: center; width: 96px; height: 96px; margin-right: 16px; border-radius: 16px; }
+
+.ch-search {
+  display: flex; align-items: center; gap: 15px;
+  margin-top: 18px;
+  height: 48px;
+  padding: 0 18px;
+  background: var(--surface);
+  border-radius: 24px;
+}
+.ch-search:focus-within { box-shadow: 0 0 0 2px var(--accent); }
+.ch-search-ic { flex: none; width: 19px; height: 19px; color: var(--accent); }
+.ch-search input {
+  flex: 1; min-width: 0; height: 100%;
+  border: 0; outline: 0; background: none;
+  font: inherit; font-size: 16px; color: var(--ink);
+}
+.ch-search input::placeholder { color: var(--ink-2); font-size: 14px; }
+
+.ch-h { margin: 24px 0 12px; font-size: 21px; font-weight: 700; line-height: 32px; color: var(--ink); }
+.ch-h[hidden] { display: none; }
+.ch-h-art { margin-top: 32px; font-size: 20px; line-height: 30px; }
+
+.cc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.cc-list li[hidden] { display: none; }
+.cc {
+  display: flex; align-items: center;
+  min-height: 82px;
+  padding: 8px 13px 8px 8px;
+  background: var(--surface);
+  border-radius: 18px;
+  color: inherit;
+  transition: transform .15s ease;
+}
+.cc:hover { text-decoration: none; transform: translateY(-1px); }
+.cc-big { min-height: 86px; padding-right: 11px; }
+.cc-img {
+  flex: none;
+  width: 78px; height: 66px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.cc-big .cc-img { width: 94px; height: 70px; }
+.cc-ic { display: grid; place-items: center; background: var(--tint); }
+.cc-body { flex: 1; min-width: 0; margin-left: 13px; margin-bottom: 4px; }
+.cc-big .cc-body { margin-left: 12px; }
+.cc-title {
+  display: block;
+  font-size: 16px; font-weight: 700; line-height: 24px;
+  color: var(--ink);
+}
+.cc-desc { display: block; margin-top: 6px; font-size: 11px; line-height: 17px; color: var(--ink-2); }
+.cc-big .cc-desc { margin-top: 4px; max-width: 150px; }
+/* Figma ย่อชื่อโรคที่ยาวเกินบรรทัดเหลือ 13px (หมอนรองกระดูกทับเส้นประสาท) */
+.cc-title.is-long { font-size: 13px; line-height: 20px; margin-bottom: 4px; }
+/* การ์ดบทความ: ชื่อเริ่มที่ขอบบน+16 ตาม Figma คำบรรยายยาว 2 บรรทัดห้อยลงล่าง */
+.cc-big .cc-body { align-self: flex-start; margin-top: 8px; margin-bottom: 0; }
+.cc-chev { flex: none; width: 5.1px; height: 9.1px; color: var(--accent); margin-left: 8px; }
+
+.ch-foot { margin: 18px 0 18px; font-size: 11px; color: var(--ink-2); }
+
+@media (min-width: 760px) {
+  .cc-list { grid-template-columns: 1fr 1fr; }
 }

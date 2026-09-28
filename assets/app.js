@@ -33,6 +33,24 @@
     } catch { /* ใช้ลิงก์ปกติ */ }
   }));
 
+  /* ---------- ค้นหาในหน้าหมวด: กรองการ์ดที่มีอยู่ในหน้า ---------- */
+  const cq = document.getElementById('cq');
+  if (cq) {
+    const items = [...document.querySelectorAll(cq.dataset.filter)];
+    const empty = document.getElementById('cqEmpty');
+    const heads = [...document.querySelectorAll('.ch-h')];
+    cq.addEventListener('input', () => {
+      const term = cq.value.trim().toLowerCase();
+      let shown = 0;
+      items.forEach(li => { const on = !term || (li.dataset.q || '').includes(term); li.hidden = !on; if (on) shown++; });
+      heads.forEach(h => {
+        const list = h.nextElementSibling;
+        h.hidden = !!term && list && ![...list.children].some(li => !li.hidden);
+      });
+      if (empty) empty.hidden = shown > 0;
+    });
+  }
+
   /* ---------- แท็บในหน้าบทเรียน ---------- */
   const tabBtns = [...document.querySelectorAll('.tab-btn[role="tab"]')];
   if (tabBtns.length) {

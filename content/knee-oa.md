@@ -1,4 +1,6 @@
 ---
+tagline: ความรู้เกี่ยวกับข้อเข่า
+thumb: /assets/dz/knee-oa.webp
 title: ข้อเข่าเสื่อม
 summary: เข่าปวด ฝืด มีเสียงในข้อ พบมากในวัยกลางคนขึ้นไป
 type: disease

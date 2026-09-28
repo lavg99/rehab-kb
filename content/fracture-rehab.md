@@ -1,4 +1,6 @@
 ---
+tagline: เรียนรู้การฟื้นฟูหลังถอดเฝือก
+thumb: /assets/dz/fracture-rehab.webp
 title: กระดูกหัก หลังถอดเฝือก
 summary: ฟื้นฟูข้อที่ฝืดและกล้ามเนื้อที่อ่อนแรงหลังใส่เฝือก
 type: disease
