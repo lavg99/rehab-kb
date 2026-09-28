@@ -4,7 +4,7 @@ summary: หลอดลมไวต่อสิ่งกระตุ้น ห�
 type: disease
 category: cardio
 icon: asthma-inhaler
-order: 3
+order: 8
 youtube: 
 related:
 reviewer: 

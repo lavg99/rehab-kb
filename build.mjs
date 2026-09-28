@@ -489,11 +489,11 @@ for (const g of groups) {
   </header>
 </div>
 
-<main id="main" class="wrap ch-wrap">
+<main id="main" class="wrap ch-wrap${c.thumbFit === 'fill' ? ' thumb-fill' : ''}">
   <p class="ch-crumb"><a href="${u('/')}">คลังความรู้</a> / ${esc(g.title)}</p>
   ${g.cat ? hero : ''}
   ${search}
-  ${dz.length ? `<h2 class="ch-h${c.listTitle ? ' ch-h-sm' : ''}">${esc(c.listTitle || 'โรคและอาการ')}</h2>
+  ${dz.length ? `<h2 class="ch-h${c.listTitle ? ' ch-h-sm' : ''}"${c.listSize ? ` style="font-size:${Number(c.listSize)}px"` : ''}>${esc(c.listTitle || 'โรคและอาการ')}</h2>
   <ul class="cc-list" id="condList">
 ${dz.map(p => condCard(p)).join('\n')}
   </ul>` : ''}

@@ -1,10 +1,12 @@
 ---
-title: ปอดอุดกั้นเรื้อรัง (COPD)
+thumb: /assets/dz/copd.webp
+tagline: การดูแลตนเองและการฟื้นฟู
+title: ปอดอุดกั้นเรื้อรัง
 summary: เหนื่อยง่าย ไอมีเสมหะเรื้อรัง มักพบในผู้สูบบุหรี่
 type: disease
 category: cardio
 icon: lungs
-order: 1
+order: 3
 youtube: 
 related:
 reviewer: 

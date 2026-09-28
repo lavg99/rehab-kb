@@ -990,6 +990,8 @@ body:has(.ch-head) { background: var(--home-bg); }
   object-fit: cover;
 }
 .cc-big .cc-img { width: 94px; height: 70px; }
+/* หัวใจและปอด: รูปใน Figma เป็นแถบยาว 3:1 และถูกบีบเต็มกรอบ ไม่ตัดขอบ (ถ้าตัดจะเสียโล่/กราฟหัวใจ) */
+.thumb-fill .cc-img { object-fit: fill; }
 .cc-ic { display: grid; place-items: center; background: var(--tint); }
 .cc-body { flex: 1; min-width: 0; margin-left: 13px; margin-bottom: 4px; }
 .cc-big .cc-body { margin-left: 12px; }

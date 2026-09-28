@@ -1,10 +1,12 @@
 ---
-title: ฟื้นฟูหัวใจ หลังหัวใจขาดเลือดหรือผ่าตัดหัวใจ
+thumb: /assets/dz/cardiac-rehab.webp
+tagline: ฟื้นฟูตามคำแนะนำของทีมดูแล
+title: การฟื้นฟูหัวใจ
 summary: กลับมาออกกำลังกายอย่างปลอดภัยหลังเป็นโรคหัวใจ
 type: disease
 category: cardio
 icon: heart-organ
-order: 2
+order: 5
 youtube: 
 related:
 reviewer: 
