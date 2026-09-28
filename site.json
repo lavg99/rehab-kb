@@ -103,7 +103,15 @@
       "slug": "women",
       "title": "สตรีและการตั้งครรภ์",
       "desc": "ตั้งครรภ์ หลังคลอด และอุ้งเชิงกราน",
-      "image": "/assets/cat3d/women.webp"
+      "image": "/assets/cat3d/women.webp",
+      "heroTitle": "ดูแลอย่างเข้าใจ\nใส่ใจทุกช่วงของคุณ",
+      "heroLine2Size": 16,
+      "heroText": "ตั้งครรภ์ หลังคลอด\nและอุ้งเชิงกราน",
+      "heroImage": "/assets/hero/women.webp",
+      "mediaTitle": "สื่อการเรียนรู้",
+      "listTitle": "การดูแลในแต่ละช่วง",
+      "listSize": 19,
+      "searchHint": "ค้นหาหัวข้อการดูแลสุขภาพ"
     }
   ],
   "nav": [

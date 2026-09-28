@@ -1,10 +1,14 @@
 ---
+thumb: /assets/dz/pregnancy-back-pain.webp
+tagline: อาการและการเคลื่อนไหว
+cardSize: 15
+cardTitle: ปวดหลังและเชิงกราน
 title: ปวดหลังและอุ้งเชิงกรานขณะตั้งครรภ์
 summary: ปวดหลังส่วนล่าง ก้น หรือหัวหน่าว ช่วงตั้งครรภ์
 type: disease
 category: women
 icon: pregnant
-order: 1
+order: 2
 youtube: 
 related:
 reviewer: 

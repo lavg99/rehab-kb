@@ -1,10 +1,14 @@
 ---
+thumb: /assets/dz/urinary-incontinence.webp
+tagline: เตรียมข้อมูลเพื่อพูดคุยกับทีมดูแล
+cardSize: 15
+cardTitle: การควบคุมปัสสาวะ
 title: ปัสสาวะเล็ด
 summary: ไอ จาม ยกของ แล้วปัสสาวะเล็ด พบบ่อยหลังคลอด
 type: disease
 category: women
 icon: bladder
-order: 2
+order: 5
 youtube: 
 related:
 reviewer: 
