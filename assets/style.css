@@ -940,6 +940,9 @@ body:has(.ch-head) { background: var(--home-bg); }
 }
 .ch-hero-text { flex: 1; min-width: 0; padding: 22px 12px 22px 16px; }
 .ch-hero-h { margin: 0; font-size: 20px; font-weight: 700; line-height: 30px; color: var(--ink); }
+/* หัวการ์ด 2 บรรทัด (ระบบประสาท): Figma บรรทัดห่าง 28 และคำบรรยายชิดขึ้น */
+.ch-hero-h.is-2line { line-height: 28px; }
+.ch-hero-h.is-2line + .ch-hero-p { margin-top: -6px; }
 .ch-hero-p { margin: 10px 0 0; font-size: 14px; line-height: 22px; color: var(--ink-2); }
 .ch-hero-img { flex: none; align-self: stretch; width: 113px; height: auto; object-fit: cover; }
 .ch-hero-img.is-thumb { align-self: center; width: 96px; height: 96px; margin-right: 16px; border-radius: 16px; }

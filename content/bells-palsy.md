@@ -1,10 +1,12 @@
 ---
-title: ใบหน้าอ่อนแรงครึ่งซีก (เบลล์พาลซี)
+thumb: /assets/dz/bells-palsy.webp
+tagline: กล้ามเนื้อใบหน้าและการฟื้นฟู
+title: อัมพาตใบหน้า
 summary: หน้าเบี้ยวครึ่งหนึ่ง หลับตาไม่สนิท มักเกิดขึ้นทันที
 type: disease
 category: neuro
 icon: head
-order: 3
+order: 6
 youtube: 
 related:
 reviewer: 

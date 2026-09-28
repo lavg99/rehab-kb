@@ -208,6 +208,8 @@ const pages = files.map(f => {
     related: Array.isArray(meta.related) ? meta.related.filter(Boolean) : [],
     tagline: typeof meta.tagline === 'string' ? meta.tagline : '',
     thumb: typeof meta.thumb === 'string' ? meta.thumb : '',
+    cardSize: Number(meta.cardSize) || 0,
+    cardTitle: typeof meta.cardTitle === 'string' ? meta.cardTitle : '',
     steps,
     order: Number(meta.order ?? 999),
     html: md(body),
@@ -449,11 +451,11 @@ const thumbHtml = (p, w, h) => p.thumb
   : p.icon ? `<span class="cc-img cc-ic"><img src="${esc(iconSrc(p.icon))}" alt="" width="40" height="40"></span>`
   : p.cover ? `<img class="cc-img" src="${esc(u(p.cover))}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async">`
   : `<span class="cc-img cc-ic"></span>`;
-const condCard = (p, big = false) => `    <li data-q="${esc((p.title + ' ' + (p.tagline || '') + ' ' + (p.summary || '')).toLowerCase())}">
+const condCard = (p, big = false) => `    <li data-q="${esc((p.title + ' ' + (p.cardTitle || '') + ' ' + (p.tagline || '') + ' ' + (p.summary || '')).toLowerCase())}">
       <a class="cc${big ? ' cc-big' : ''}" href="${u(`/a/${esc(p.slug)}.html`)}">
         ${big ? thumbHtml(p, 94, 70) : thumbHtml(p, 78, 66)}
         <span class="cc-body">
-          <span class="cc-title${!big && [...p.title].length > 24 ? ' is-long' : ''}">${esc(p.title)}</span>
+          <span class="cc-title${!big && [...p.title].length > 24 ? ' is-long' : ''}"${p.cardSize ? ` style="font-size:${p.cardSize}px"` : ''}>${esc(p.cardTitle || p.title)}</span>
           <span class="cc-desc">${esc(p.tagline || p.summary)}</span>
         </span>
         ${figSvg('chev-right', 'cc-chev')}
@@ -466,7 +468,7 @@ for (const g of groups) {
   const c = g.cat || {};
   const hero = `<section class="ch-hero">
     <div class="ch-hero-text">
-      <h2 class="ch-hero-h">${esc(c.heroTitle || g.title)}</h2>
+      <h2 class="ch-hero-h${(c.heroTitle || '').includes('\n') ? ' is-2line' : ''}">${(c.heroTitle || g.title).split('\n').map(esc).join('<br>')}</h2>
       <p class="ch-hero-p">${(c.heroText || g.desc).split('\n').map(esc).join('<br>')}</p>
     </div>
     ${c.heroImage || c.image ? `<img class="ch-hero-img${c.heroImage ? '' : ' is-thumb'}" src="${esc(u(c.heroImage || c.image))}" alt="" width="113" height="142" decoding="async">` : ''}
@@ -493,7 +495,7 @@ for (const g of groups) {
   <ul class="cc-list" id="condList">
 ${dz.map(p => condCard(p)).join('\n')}
   </ul>` : ''}
-  ${other.length ? `<h2 class="ch-h ch-h-art">ท่าบริหารและบทความ</h2>
+  ${other.length ? `<h2 class="ch-h ch-h-art">${esc(c.mediaTitle || 'ท่าบริหารและบทความ')}</h2>
   <ul class="cc-list" id="artList">
 ${other.map(p => condCard(p, true)).join('\n')}
   </ul>` : ''}

@@ -1,10 +1,12 @@
 ---
+thumb: /assets/dz/spinal-cord-injury.webp
+tagline: ไขสันหลังและการเคลื่อนไหว
 title: บาดเจ็บไขสันหลัง
 summary: อ่อนแรงหรือชาตั้งแต่ระดับที่บาดเจ็บลงไป
 type: disease
 category: neuro
 icon: wheelchair
-order: 5
+order: 3
 youtube: 
 related:
 reviewer: 

@@ -1,4 +1,8 @@
 ---
+cardTitle: เรียนรู้การฟื้นฟูระบบประสาท
+cardSize: 13
+thumb: /assets/dz/stroke-rehab.webp
+tagline: สื่อประกอบคำแนะนำจากนักกายภาพบำบัด
 title: การฟื้นฟูหลังเป็นอัมพาตครึ่งซีก
 summary: สิ่งที่ผู้ป่วยและญาติควรรู้ในช่วงแรก
 category: neuro

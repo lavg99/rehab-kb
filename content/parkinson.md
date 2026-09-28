@@ -1,4 +1,6 @@
 ---
+thumb: /assets/dz/parkinson.webp
+tagline: การเดินและการทรงตัว
 title: โรคพาร์กินสัน
 summary: สั่น เคลื่อนไหวช้า ก้าวสั้น ๆ เสี่ยงล้มง่าย
 type: disease

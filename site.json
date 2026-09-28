@@ -28,7 +28,11 @@
       "slug": "neuro",
       "title": "ระบบประสาท",
       "desc": "สมอง เส้นประสาท และการเคลื่อนไหว",
-      "image": "/assets/cat3d/neuro.webp"
+      "image": "/assets/cat3d/neuro.webp",
+      "heroTitle": "ดูแลสมองและ\nระบบประสาท",
+      "heroText": "เรียนรู้ เข้าใจ และฟื้นฟู\nอย่างเหมาะสม",
+      "heroImage": "/assets/hero/neuro.webp",
+      "mediaTitle": "สื่อการเรียนรู้"
     },
     {
       "slug": "elderly",

@@ -1,10 +1,12 @@
 ---
-title: ปลายประสาทเสื่อม ชามือชาเท้า
+thumb: /assets/dz/diabetic-neuropathy.webp
+tagline: ความรู้เกี่ยวกับเส้นประสาท
+title: เส้นประสาทส่วนปลาย
 summary: ชา แสบร้อนปลายมือปลายเท้า พบบ่อยในผู้ป่วยเบาหวาน
 type: disease
 category: neuro
 icon: nerve
-order: 4
+order: 5
 youtube: 
 related:
 reviewer: 

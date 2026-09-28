@@ -1,5 +1,7 @@
 ---
-title: โรคหลอดเลือดสมอง (อัมพฤกษ์ อัมพาต)
+thumb: /assets/dz/stroke.webp
+tagline: การเคลื่อนไหวและการฟื้นฟู
+title: โรคหลอดเลือดสมอง
 summary: แขนขาอ่อนแรงครึ่งซีก พูดไม่ชัด หลังเส้นเลือดสมองตีบหรือแตก
 type: disease
 category: neuro
