@@ -4,6 +4,10 @@ summary: สิ่งที่ผู้ป่วยและญาติคว�
 category: neuro
 cover: /assets/img/brain.png
 order: 2
+reviewer: 
+reviewed: 
+refs:
+  - Winstein CJ, et al. Guidelines for Adult Stroke Rehabilitation and Recovery: A Guideline for Healthcare Professionals From the American Heart Association/American Stroke Association. Stroke. 2016;47(6):e98-e169.
 ---
 
 ## ช่วงแรกสำคัญที่สุด

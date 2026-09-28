@@ -142,6 +142,69 @@
     });
   }
 
+  /* ---------- นับการเปิดอ่าน + แบบประเมินความเข้าใจ (ตัวชี้วัด CQI) ----------
+     เก็บแค่: บทความไหน · วันที่ · มาจาก QR หรือไม่ · คะแนน 1-5 — ไม่มีชื่อหรือข้อมูลส่วนตัว */
+  const FS = document.body.dataset.fs;
+  const slug = document.body.dataset.track;
+  const today = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+  const fsAdd = (col, fields) => {
+    if (!FS) return Promise.resolve(false);
+    const body = { fields: {} };
+    for (const [k, v] of Object.entries(fields)) {
+      body.fields[k] = typeof v === 'number' ? { integerValue: String(v) } : { stringValue: String(v) };
+    }
+    return fetch(`https://firestore.googleapis.com/v1/projects/${FS}/databases/(default)/documents/${col}`, {
+      method: 'POST', keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }).then(r => r.ok).catch(() => false);
+  };
+  const isBot = /bot|crawl|spider|preview|facebookexternalhit|Line\/|HeadlessChrome/i.test(navigator.userAgent);
+
+  if (slug && !isBot) {
+    const params = new URLSearchParams(location.search);
+    const src = params.get('src') === 'qr' ? 'qr' : 'web';
+    // คนเดิมเปิดบทความเดิมวันเดียวกัน นับครั้งเดียว
+    const seenKey = `rehab-kb-v:${slug}:${today()}`;
+    let seen = false;
+    try { seen = !!localStorage.getItem(seenKey); } catch {}
+    if (!seen) {
+      fsAdd('views', { a: slug, d: today(), src }).then(ok => {
+        if (ok) try { localStorage.setItem(seenKey, '1'); } catch {}
+      });
+    }
+    // เอา ?src=qr ออกจากแถบที่อยู่ ไม่ให้ติดไปตอนแชร์ต่อ
+    if (params.has('src')) history.replaceState(null, '', location.pathname + location.hash);
+  }
+
+  document.querySelectorAll('[data-fb]').forEach(box => {
+    const a = box.dataset.fb;
+    const key = `rehab-kb-fb:${a}`;
+    const btns = [...box.querySelectorAll('.fb-btn')];
+    const thanks = box.querySelector('.fb-thanks');
+    const mark = (v) => {
+      btns.forEach(b => b.setAttribute('aria-pressed', b.dataset.score === String(v) ? 'true' : 'false'));
+      if (thanks) thanks.hidden = false;
+    };
+    let prev = null;
+    try { prev = localStorage.getItem(key); } catch {}
+    if (prev) mark(prev);
+    btns.forEach(b => b.addEventListener('click', () => {
+      if (prev) { mark(prev); return; }          // ตอบได้ครั้งเดียวต่อเครื่อง
+      const v = Number(b.dataset.score);
+      prev = String(v);
+      mark(v);
+      try { localStorage.setItem(key, prev); } catch {}
+      fsAdd('feedback', { a, s: v, d: today() });
+    }));
+  });
+
+  const qrPrint = document.getElementById('qrPrint');
+  if (qrPrint) qrPrint.addEventListener('click', () => window.print());
+
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c =>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

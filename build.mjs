@@ -123,7 +123,16 @@ function tabbar(current = '/') {
 }
 
 // ---------- โครงหน้า ----------
-function layout({ title, desc, body, isHome = false, current = '/' }) {
+// มาตรวัดความเข้าใจท้ายบทความ (1-5) — ใช้คำนวณความพึงพอใจก่อน/หลังสำหรับ CQI
+const FB_SCALE = [
+  { v: 1, face: '😣', label: 'ไม่เข้าใจ' },
+  { v: 2, face: '😕', label: 'เข้าใจน้อย' },
+  { v: 3, face: '😐', label: 'พอเข้าใจ' },
+  { v: 4, face: '🙂', label: 'เข้าใจ' },
+  { v: 5, face: '😄', label: 'เข้าใจดีมาก' },
+];
+
+function layout({ title, desc, body, isHome = false, current = '/', track = '', noindex = false, extraJs = '' }) {
   const pageTitle = isHome ? `${SITE.title} · ${SITE.org}` : `${title} · ${SITE.title}`;
   return `<!doctype html>
 <html lang="th" data-theme="light">
@@ -149,12 +158,13 @@ ${SITE.ogImage ? `<meta property="og:image" content="${esc(SITE.ogImage)}">` : '
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="${u('/assets/style.css')}">
+${noindex ? '<meta name="robots" content="noindex">' : ''}
 </head>
-<body>
+<body${track ? ` data-track="${esc(track)}"` : ''} data-fs="${esc(SITE.firestoreProject || '')}">
 <a class="skip" href="#main">ข้ามไปเนื้อหา</a>
 ${body}
 ${tabbar(current)}
-<script src="${u('/assets/app.js')}"></script>
+<script src="${u('/assets/app.js')}"></script>${extraJs ? `\n<script src="${u(extraJs)}"></script>` : ''}
 </body>
 </html>`;
 }
@@ -184,6 +194,10 @@ const pages = files.map(f => {
     video: meta.video || '',
     videoUrl: meta.videoUrl || '',
     info: Array.isArray(meta.info) ? meta.info : (meta.info ? [meta.info] : []),
+    // CQI: แหล่งอ้างอิง + ผู้ตรวจเนื้อหา (ค่าว่างใน frontmatter ถูกอ่านเป็น [] — แปลงเป็นข้อความว่าง)
+    refs: Array.isArray(meta.refs) ? meta.refs.filter(Boolean) : (meta.refs ? [meta.refs] : []),
+    reviewer: typeof meta.reviewer === 'string' ? meta.reviewer : '',
+    reviewed: typeof meta.reviewed === 'string' ? meta.reviewed : '',
     steps,
     order: Number(meta.order ?? 999),
     html: md(body),
@@ -307,15 +321,33 @@ ${p.steps.map(s => `    <li class="step">
 ${p.info.map(t => `    <p>${esc(t)}</p>`).join('\n')}
   </div>` : ''}
 
+  <section class="feedback" data-fb="${esc(p.slug)}" aria-labelledby="fb-h-${esc(p.slug)}">
+    <h3 class="fb-h" id="fb-h-${esc(p.slug)}">อ่านแล้วเข้าใจไหม</h3>
+    <p class="fb-sub">แตะ 1 ครั้ง ช่วยให้แผนกปรับปรุงเนื้อหา</p>
+    <div class="fb-row">
+${FB_SCALE.map(f => `      <button type="button" class="fb-btn" data-score="${f.v}" aria-label="${esc(f.label)}"><span class="fb-face" aria-hidden="true">${f.face}</span><span class="fb-lbl">${esc(f.label)}</span></button>`).join('\n')}
+    </div>
+    <p class="fb-thanks" hidden>ขอบคุณสำหรับความเห็น</p>
+  </section>
+
   <div class="btn-row">
     <button type="button" class="btn" data-save="${esc(p.slug)}">บันทึกไว้อ่าน</button>
     <a class="btn btn-primary" href="${u('/contact.html')}">สอบถามแผนก</a>
   </div>
 
+  ${p.refs.length ? `<section class="refs">
+    <h3 class="refs-h">แหล่งอ้างอิง</h3>
+    <ol>
+${p.refs.map(x => `      <li>${esc(x)}</li>`).join('\n')}
+    </ol>
+  </section>` : ''}
+  ${p.reviewer || p.reviewed ? `<p class="reviewed">${p.reviewer ? `ตรวจเนื้อหาโดย ${esc(p.reviewer)}` : ''}${p.reviewer && p.reviewed ? ' · ' : ''}${p.reviewed ? `ปรับปรุงล่าสุด ${esc(p.reviewed)}` : ''}</p>` : ''}
+
   <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
 </main>`;
 
   writeFileSync(join(DIST, 'a', `${p.slug}.html`), layout({
+    track: p.slug,
     title: p.title, desc: p.summary, body, current: '/',
   }));
 }
@@ -393,6 +425,79 @@ writeFileSync(join(DIST, 'contact.html'), layout({
     ${SITE.contact ? `<p>${esc(SITE.contact)}</p>` : ''}
   </div>
   <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
+</main>`,
+}));
+
+// ---------- หน้าสำหรับเจ้าหน้าที่: สถิติ (CQI) + QR ----------
+// ไม่อยู่ในเมนูผู้ป่วย เปิดตรงจากลิงก์ /stats.html และ /qr.html
+const staffTop = (title) => `<div class="topbar-tint">
+  <header class="topbar">
+    <a class="back-btn" href="${u('/')}" aria-label="ย้อนกลับ">‹</a>
+    <div class="head-text left"><h1 class="head-title sm">${esc(title)}</h1></div>
+  </header>
+</div>`;
+
+writeFileSync(join(DIST, 'stats.html'), layout({
+  title: 'สถิติการใช้งาน', desc: 'ตัวชี้วัดสำหรับ CQI', current: '/stats.html', noindex: true, extraJs: '/assets/stats.js',
+  body: `${staffTop('สถิติการใช้งาน')}
+<main id="main" class="wrap wrap-wide">
+  <p class="crumb"><a href="${u('/')}">หน้าหลัก</a> › สถิติ (สำหรับเจ้าหน้าที่)</p>
+
+  <form class="st-range" id="stRange">
+    <label>ตั้งแต่ <input type="date" id="stFrom" required></label>
+    <label>ถึง <input type="date" id="stTo" required></label>
+    <button type="submit" class="btn btn-primary">ดูข้อมูล</button>
+  </form>
+
+  <p class="st-status" id="stStatus">กำลังโหลด…</p>
+
+  <section class="st-cards" id="stCards" hidden>
+    <div class="st-card"><span class="st-num" id="kViews">0</span><span class="st-lbl">ครั้งที่เปิดอ่าน</span></div>
+    <div class="st-card"><span class="st-num" id="kQr">0</span><span class="st-lbl">เปิดจาก QR</span></div>
+    <div class="st-card"><span class="st-num" id="kFb">0</span><span class="st-lbl">คนตอบแบบประเมิน</span></div>
+    <div class="st-card"><span class="st-num" id="kSat">–</span><span class="st-lbl">เข้าใจ/เข้าใจดีมาก</span></div>
+  </section>
+
+  <section class="st-block" id="stChartWrap" hidden>
+    <h2 class="section-h">จำนวนการเปิดอ่านรายวัน</h2>
+    <div class="st-chart" id="stChart"></div>
+  </section>
+
+  <section class="st-block" id="stTableWrap" hidden>
+    <h2 class="section-h">แยกตามบทความ</h2>
+    <div class="st-table-wrap">
+      <table class="st-table">
+        <thead><tr><th>บทความ</th><th>เปิดอ่าน</th><th>จาก QR</th><th>ตอบประเมิน</th><th>คะแนนเฉลี่ย (เต็ม 5)</th><th>เข้าใจขึ้นไป</th></tr></thead>
+        <tbody id="stBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="btn-row">
+    <button type="button" class="btn" id="stCsv" disabled>ดาวน์โหลดไฟล์ Excel (CSV)</button>
+    <a class="btn btn-primary" href="${u('/qr.html')}">พิมพ์ QR บทความ</a>
+  </div>
+  <p class="st-note">นับทุกครั้งที่มีคนเปิดบทความ (คนเดิมเปิดซ้ำวันเดียวกันนับครั้งเดียว) · ไม่เก็บชื่อหรือข้อมูลส่วนตัวของผู้อ่าน</p>
+  <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
+</main>`,
+}));
+
+const siteUrl = (SITE.siteUrl || '').replace(/\/+$/, '');
+writeFileSync(join(DIST, 'qr.html'), layout({
+  title: 'QR บทความ', desc: 'พิมพ์ QR ให้ผู้ป่วยสแกนอ่านที่บ้าน', current: '/qr.html', noindex: true,
+  body: `${staffTop('QR บทความ')}
+<main id="main" class="wrap wrap-wide">
+  <p class="crumb no-print"><a href="${u('/')}">หน้าหลัก</a> › QR บทความ (สำหรับเจ้าหน้าที่)</p>
+  <p class="lesson-sub no-print">พิมพ์แล้วแปะที่แผนก หรือให้ผู้ป่วยตอนกลับบ้าน สแกนแล้วเข้าบทความนั้นตรง ๆ และระบบนับแยกว่าเปิดจาก QR</p>
+  <div class="btn-row no-print"><button type="button" class="btn btn-primary" id="qrPrint">พิมพ์หน้านี้</button></div>
+  <ul class="qr-grid">
+${pages.map(p => `    <li class="qr-card">
+      <img src="${u(`/assets/qr/${esc(p.slug)}.svg`)}" alt="QR ${esc(p.title)}" width="180" height="180">
+      <span class="qr-title">${esc(p.title)}</span>
+      <span class="qr-org">${esc(SITE.dept)} ${esc(SITE.org)}</span>
+      <span class="qr-url">${esc(siteUrl + `/a/${p.slug}.html`)}</span>
+    </li>`).join('\n')}
+  </ul>
 </main>`,
 }));
 

@@ -4,6 +4,10 @@ summary: เลือกให้เหมาะ ใช้ให้ถูก ล
 category: elderly
 cover: /assets/img/elderly.png
 order: 3
+reviewer: 
+reviewed: 
+refs:
+  - Bradley SM, Hernandez CR. Geriatric assistive devices. Am Fam Physician. 2011;84(4):405-11.
 ---
 
 ## เลือกไม้เท้าให้พอดีตัว

@@ -35,9 +35,24 @@
     }
   ],
   "nav": [
-    { "label": "หน้าหลัก", "href": "/" },
-    { "label": "คลังความรู้", "href": "/", "active": true },
-    { "label": "บันทึกไว้", "href": "/saved.html" },
-    { "label": "ติดต่อ", "href": "/contact.html" }
-  ]
+    {
+      "label": "หน้าหลัก",
+      "href": "/"
+    },
+    {
+      "label": "คลังความรู้",
+      "href": "/",
+      "active": true
+    },
+    {
+      "label": "บันทึกไว้",
+      "href": "/saved.html"
+    },
+    {
+      "label": "ติดต่อ",
+      "href": "/contact.html"
+    }
+  ],
+  "siteUrl": "https://rehabkb-srp.web.app",
+  "firestoreProject": "rehabkb-srp"
 }

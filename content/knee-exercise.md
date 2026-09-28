@@ -15,6 +15,11 @@ step2img: /assets/img/therapist.png
 info:
   - เลือกท่าฝึกให้เหมาะกับคำแนะนำ
   - ที่คุณได้รับจากนักกายภาพบำบัด
+reviewer: 
+reviewed: 
+refs:
+  - Bannuru RR, et al. OARSI guidelines for the non-surgical management of knee, hip, and polyarticular osteoarthritis. Osteoarthritis Cartilage. 2019;27(11):1578-89.
+  - Kolasinski SL, et al. 2019 American College of Rheumatology/Arthritis Foundation Guideline for the Management of Osteoarthritis of the Hand, Hip, and Knee. Arthritis Care Res. 2020;72(2):149-62.
 ---
 
 ## ก่อนเริ่มบริหาร

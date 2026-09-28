@@ -1,0 +1,25 @@
+rules_version = '2';
+// คลังความรู้ฟื้นฟูฯ — เก็บแค่ตัวนับการอ่าน + คะแนนความเข้าใจ (ไม่มีข้อมูลส่วนตัว)
+// ทุกคนเพิ่มได้ตามรูปแบบที่กำหนดเท่านั้น · อ่านได้ (หน้าสถิติ) · แก้/ลบไม่ได้
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function okSlug(a) { return a is string && a.matches('^[a-z0-9-]{1,60}$'); }
+    function okDay(d)  { return d is string && d.matches('^20[2-9][0-9]-[01][0-9]-[0-3][0-9]$'); }
+
+    match /views/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['a', 'd', 'src'])
+        && okSlug(request.resource.data.a) && okDay(request.resource.data.d)
+        && request.resource.data.src in ['qr', 'web'];
+      allow update, delete: if false;
+    }
+    match /feedback/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['a', 'd', 's'])
+        && okSlug(request.resource.data.a) && okDay(request.resource.data.d)
+        && request.resource.data.s is int && request.resource.data.s >= 1 && request.resource.data.s <= 5;
+      allow update, delete: if false;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

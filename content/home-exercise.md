@@ -4,6 +4,10 @@ summary: วันละ 10-15 นาที ทำได้ทุกวัน
 category: bone
 cover: /assets/img/knee.png
 order: 4
+reviewer: 
+reviewed: 
+refs:
+  - Bull FC, et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med. 2020;54(24):1451-62.
 ---
 
 ## ก่อนเริ่ม
