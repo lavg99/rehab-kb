@@ -114,52 +114,126 @@
     }));
   }
 
-  /* ---------- บันทึกไว้อ่าน ---------- */
+  /* ---------- บันทึกไว้อ่าน (เก็บในเครื่องผู้ใช้ ไม่ต้องล็อกอิน) ---------- */
   const SAVE_KEY = 'rehab-kb-saved';
+  const urlOf = (slug) => `${BASE}/a/${slug}.html`;
+  const slugOf = (url) => (String(url).match(/\/a\/([^/]+)\.html$/) || [])[1] || '';
   const readSaved = () => {
-    try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '[]'); } catch { return []; }
+    try {
+      const v = JSON.parse(localStorage.getItem(SAVE_KEY) || '[]');
+      return Array.isArray(v) ? v.filter(x => x && x.u) : [];
+    } catch { return []; }
   };
-  const writeSaved = (arr) => localStorage.setItem(SAVE_KEY, JSON.stringify(arr));
+  const writeSaved = (arr) => {
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(arr)); return true; } catch { return false; }
+  };
+  const isSaved = (slug) => readSaved().some(x => slugOf(x.u) === slug);
 
-  document.querySelectorAll('[data-save]').forEach(btn => {
-    const slug = btn.dataset.save;
-    const sync = () => {
-      const on = readSaved().some(x => x.u === `${BASE}/a/${slug}.html`);
+  // แจ้งผลสั้น ๆ ที่ขอบล่าง (ไม่ใช้ alert)
+  let toastEl = null, toastT = null;
+  const toast = (msg, link) => {
+    if (!toastEl) {
+      toastEl = document.createElement('div');
+      toastEl.className = 'toast';
+      toastEl.setAttribute('role', 'status');
+      document.body.appendChild(toastEl);
+    }
+    toastEl.innerHTML = `<span>${escapeHtml(msg)}</span>${link ? `<a href="${BASE}/saved.html">ดูที่บันทึกไว้</a>` : ''}`;
+    toastEl.classList.add('is-on');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => toastEl.classList.remove('is-on'), 2600);
+  };
+
+  const saveBtns = [...document.querySelectorAll('[data-save]')];
+  const syncSave = () => saveBtns.forEach(btn => {
+    const on = isSaved(btn.dataset.save);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if (btn.hasAttribute('data-save-text')) {
       btn.textContent = on ? '✓ บันทึกแล้ว' : 'บันทึกไว้อ่าน';
       btn.classList.toggle('btn-primary', on);
-    };
-    sync();
-    btn.addEventListener('click', () => {
-      const url = `${BASE}/a/${slug}.html`;
-      const list = readSaved();
-      const i = list.findIndex(x => x.u === url);
-      if (i >= 0) list.splice(i, 1);
-      else {
-        const t = document.querySelector('.lesson-title')?.textContent?.trim() || slug;
-        const s = document.querySelector('.lesson-sub')?.textContent?.trim() || '';
-        list.push({ t, s, u: url });
-      }
-      writeSaved(list);
-      sync();
-    });
+    } else {
+      btn.setAttribute('aria-label', on ? 'เอาออกจากที่บันทึกไว้' : 'บันทึกบทความนี้');
+    }
   });
+  saveBtns.forEach(btn => btn.addEventListener('click', () => {
+    const slug = btn.dataset.save;
+    const list = readSaved();
+    const i = list.findIndex(x => slugOf(x.u) === slug);
+    if (i >= 0) list.splice(i, 1);
+    else {
+      const t = document.querySelector('.lesson-title')?.textContent?.trim() || slug;
+      const s = document.querySelector('.lesson-sub')?.textContent?.trim() || '';
+      list.unshift({ t, s, u: urlOf(slug), at: Date.now() });   // ล่าสุดอยู่บนสุด
+    }
+    if (!writeSaved(list)) { toast('บันทึกไม่ได้ในโหมดนี้ของเบราว์เซอร์'); return; }
+    syncSave();
+    toast(i >= 0 ? 'เอาออกจากที่บันทึกไว้แล้ว' : 'บันทึกแล้ว', i < 0);
+  }));
+  syncSave();
+  // กลับมาหน้าเดิมด้วยปุ่มย้อนกลับ ให้สถานะตรงกับที่แก้ในหน้าอื่น
+  window.addEventListener('pageshow', syncSave);
 
   /* ---------- หน้า "บันทึกไว้" ---------- */
   const savedList = document.getElementById('savedList');
   if (savedList) {
-    const list = readSaved();
     const empty = document.getElementById('savedEmpty');
-    if (list.length) {
-      if (empty) empty.hidden = true;
-      savedList.innerHTML = list.map(x => `<li>
-        <a class="cat" href="${x.u}">
-          <span class="cat-body">
-            <span class="cat-title">${escapeHtml(x.t)}</span>
-            ${x.s ? `<span class="cat-desc">${escapeHtml(x.s)}</span>` : ''}
-          </span>
-          <span class="cat-chev" aria-hidden="true">›</span>
-        </a></li>`).join('');
-    }
+    const count = document.getElementById('savedCount');
+    let info = {};
+    const render = () => {
+      const list = readSaved();
+      if (empty) empty.hidden = list.length > 0;
+      if (count) { count.hidden = !list.length; count.textContent = `${list.length} เรื่อง`; }
+      savedList.innerHTML = list.map(x => {
+        const k = slugOf(x.u), m = info[k] || {};
+        const img = m.th ? `<img class="cc-img" src="${m.th}" alt="" width="78" height="66" loading="lazy" decoding="async">`
+          : m.i ? (m.ic ? `<span class="cc-img cc-ic"><img src="${m.i}" alt="" width="40" height="40"></span>` : `<img class="cc-img" src="${m.i}" alt="" width="78" height="66" loading="lazy">`)
+          : `<span class="cc-img cc-ic"></span>`;
+        return `<li>
+          <a class="cc" href="${x.u}">
+            ${img}
+            <span class="cc-body">
+              <span class="cc-title">${escapeHtml(m.t || x.t)}</span>
+              <span class="cc-desc">${escapeHtml(m.c || m.s || x.s || '')}</span>
+            </span>
+          </a>
+          <button type="button" class="sv-del" data-del="${escapeHtml(k)}" aria-label="เอา ${escapeHtml(m.t || x.t)} ออก">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </li>`;
+      }).join('');
+    };
+    savedList.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-del]');
+      if (!b) return;
+      const k = b.dataset.del;
+      const list = readSaved();
+      const i = list.findIndex(x => slugOf(x.u) === k);
+      if (i < 0) return;
+      const [gone] = list.splice(i, 1);
+      writeSaved(list);
+      render();
+      toast('เอาออกแล้ว');
+      // ให้กดคืนได้ทันที
+      const undo = document.createElement('button');
+      undo.type = 'button'; undo.className = 'toast-undo'; undo.textContent = 'เอาคืน';
+      undo.addEventListener('click', () => {
+        const now = readSaved();
+        now.splice(Math.min(i, now.length), 0, gone);
+        writeSaved(now); render(); toastEl.classList.remove('is-on');
+      });
+      toastEl.appendChild(undo);
+    });
+    render();
+    // ดึงชื่อ/รูปล่าสุดจากดัชนี (ชื่อบทความเปลี่ยนภายหลังก็แสดงชื่อใหม่)
+    fetch(`${BASE}/search.json`).then(r => r.json()).then(idx => {
+      idx.forEach(x => { const k = x.k || slugOf(x.u); if (k) info[k] = x; });
+      // ลบรายการที่บทความถูกลบไปแล้ว
+      const list = readSaved();
+      const keep = list.filter(x => info[slugOf(x.u)]);
+      if (keep.length !== list.length) writeSaved(keep);
+      render();
+    }).catch(() => {});
+    window.addEventListener('pageshow', render);
   }
 
   /* ---------- ค้นหาในหน้าแรก ---------- */

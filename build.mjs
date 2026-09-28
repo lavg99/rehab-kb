@@ -332,6 +332,7 @@ function diseaseBody(p, cat, crumb) {
     <div class="head-text left">
       <h1 class="head-title sm">${esc(cat ? cat.title : 'โรคและอาการ')}</h1>
     </div>
+    <button type="button" class="save-top" data-save="${esc(p.slug)}" aria-pressed="false" aria-label="บันทึกบทความนี้">${figSvg('nav-bookmark')}</button>
   </header>
 </div>
 
@@ -359,7 +360,7 @@ ${rel.map(listCard).join('\n')}
   ${feedbackHtml(p)}
 
   <div class="btn-row">
-    <button type="button" class="btn" data-save="${esc(p.slug)}">บันทึกไว้อ่าน</button>
+    <button type="button" class="btn" data-save="${esc(p.slug)}" data-save-text aria-pressed="false">บันทึกไว้อ่าน</button>
     <a class="btn btn-primary" href="${u('/contact.html')}">สอบถามแผนก</a>
   </div>
 
@@ -403,6 +404,7 @@ ${p.steps.map(s => `    <li class="step">
     <div class="head-text left">
       <h1 class="head-title sm">สื่อการสอน</h1>
     </div>
+    <button type="button" class="save-top" data-save="${esc(p.slug)}" aria-pressed="false" aria-label="บันทึกบทความนี้">${figSvg('nav-bookmark')}</button>
   </header>
 </div>
 
@@ -437,7 +439,7 @@ ${FB_SCALE.map(f => `      <button type="button" class="fb-btn" data-score="${f.
   </section>
 
   <div class="btn-row">
-    <button type="button" class="btn" data-save="${esc(p.slug)}">บันทึกไว้อ่าน</button>
+    <button type="button" class="btn" data-save="${esc(p.slug)}" data-save-text aria-pressed="false">บันทึกไว้อ่าน</button>
     <a class="btn btn-primary" href="${u('/contact.html')}">สอบถามแผนก</a>
   </div>
 
@@ -644,8 +646,14 @@ writeFileSync(join(DIST, 'saved.html'), layout({
 </div>
 <main id="main" class="wrap">
   <p class="crumb"><a href="${u('/')}">หน้าหลัก</a> › บันทึกไว้</p>
-  <ul class="cat-list" id="savedList" style="margin-top:18px"></ul>
-  <p class="empty" id="savedEmpty">ยังไม่มีเนื้อหาที่บันทึกไว้</p>
+  <p class="art-count" id="savedCount" hidden></p>
+  <ul class="cc-list sv-list" id="savedList"></ul>
+  <div class="saved-empty" id="savedEmpty">
+    <span class="saved-empty-ic">${figSvg('nav-bookmark')}</span>
+    <p class="saved-empty-h">ยังไม่มีบทความที่บันทึกไว้</p>
+    <p class="saved-empty-p">กดรูปที่คั่นหนังสือมุมขวาบนของบทความ เพื่อเก็บไว้อ่านทีหลัง</p>
+    <a class="btn btn-primary" href="${u('/articles.html')}">ดูบทความทั้งหมด</a>
+  </div>
   <p class="foot">${esc(SITE.dept)} • ${esc(SITE.org)}</p>
 </main>`,
 }));
@@ -757,7 +765,8 @@ ${pages.map(p => `    <li class="qr-card">
 
 // ---------- ดัชนีค้นหา ----------
 writeFileSync(join(DIST, 'search.json'), JSON.stringify(
-  pages.map(p => ({ t: p.title, s: p.summary, u: u(`/a/${p.slug}.html`), i: p.icon ? iconSrc(p.icon) : (p.cover ? u(p.cover) : ''), ic: p.icon ? 1 : 0 })),
+  pages.map(p => ({ t: p.title, s: p.summary, u: u(`/a/${p.slug}.html`), i: p.icon ? iconSrc(p.icon) : (p.cover ? u(p.cover) : ''), ic: p.icon ? 1 : 0,
+    k: p.slug, th: p.thumb ? u(p.thumb) : '', c: ((SITE.categories || []).find(c => c.slug === p.category) || {}).title || '' })),
 ));
 
 // ---------- assets + manifest ----------
