@@ -1,10 +1,14 @@
 ---
+thumb: /assets/dz/motor-delay.webp
+tagline: การนั่ง คลาน ยืน และเดิน
+cardSize: 15
+cardTitle: การเคลื่อนไหวร่างกาย
 title: พัฒนาการการเคลื่อนไหวล่าช้า
 summary: ชันคอ นั่ง คลาน หรือเดินช้ากว่าวัย
 type: disease
 category: child
 icon: baby-male-0609m
-order: 1
+order: 2
 youtube: 
 related:
 reviewer: 

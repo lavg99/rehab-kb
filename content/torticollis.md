@@ -4,7 +4,7 @@ summary: ทารกเอียงคอไปข้างหนึ่ง ห�
 type: disease
 category: child
 icon: child-care
-order: 3
+order: 9
 youtube: 
 related:
 reviewer: 

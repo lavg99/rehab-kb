@@ -943,6 +943,10 @@ body:has(.ch-head) { background: var(--home-bg); }
 /* หัวการ์ด 2 บรรทัด (ระบบประสาท): Figma บรรทัดห่าง 28 และคำบรรยายชิดขึ้น */
 .ch-hero-h.is-2line { line-height: 28px; }
 .ch-hero-h.is-2line + .ch-hero-p { margin-top: -6px; }
+/* บรรทัดที่ 2 ตัวเล็ก (เด็กและพัฒนาการ) Figma 16px ชิดบรรทัดแรก */
+.ch-hero-h span { display: block; line-height: 24px; }
+.ch-hero-text:has(.ch-hero-h span) { position: relative; top: -5px; }
+.ch-hero-h.is-2line:has(span) + .ch-hero-p { margin-top: -1px; }
 .ch-hero-p { margin: 10px 0 0; font-size: 14px; line-height: 22px; color: var(--ink-2); }
 .ch-hero-img { flex: none; align-self: stretch; width: 113px; height: auto; object-fit: cover; }
 .ch-hero-img.is-thumb { align-self: center; width: 96px; height: 96px; margin-right: 16px; border-radius: 16px; }

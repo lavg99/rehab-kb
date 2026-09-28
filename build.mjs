@@ -456,7 +456,7 @@ const condCard = (p, big = false) => `    <li data-q="${esc((p.title + ' ' + (p.
       <a class="cc${big ? ' cc-big' : ''}" href="${u(`/a/${esc(p.slug)}.html`)}">
         ${big ? thumbHtml(p, 94, 70) : thumbHtml(p, 78, 66)}
         <span class="cc-body">
-          <span class="cc-title${!big && [...p.title].length > 24 ? ' is-long' : ''}"${p.cardSize ? ` style="font-size:${p.cardSize}px"` : ''}>${esc(p.cardTitle || p.title)}</span>
+          <span class="cc-title${!big && [...(p.cardTitle || p.title)].length > 24 ? ' is-long' : ''}"${p.cardSize ? ` style="font-size:${p.cardSize}px"` : ''}>${esc(p.cardTitle || p.title)}</span>
           <span class="cc-desc">${(p.tagline || p.summary).split('\\n').map(esc).join('<br>')}</span>
         </span>
         ${figSvg('chev-right', 'cc-chev')}
@@ -470,7 +470,7 @@ for (const g of groups) {
   const c = g.cat || {};
   const hero = `<section class="ch-hero">
     <div class="ch-hero-text">
-      <h2 class="ch-hero-h${(c.heroTitle || '').includes('\n') ? ' is-2line' : ''}">${(c.heroTitle || g.title).split('\n').map(esc).join('<br>')}</h2>
+      <h2 class="ch-hero-h${(c.heroTitle || '').includes('\n') ? ' is-2line' : ''}">${(c.heroTitle || g.title).split('\n').map((t, i) => i === 1 && c.heroLine2Size ? `<span style="font-size:${Number(c.heroLine2Size)}px">${esc(t)}</span>` : esc(t)).join('<br>')}</h2>
       <p class="ch-hero-p">${(c.heroText || g.desc).split('\n').map(esc).join('<br>')}</p>
     </div>
     ${c.heroImage || c.image ? `<img class="ch-hero-img${c.heroImage ? '' : ' is-thumb'}" src="${esc(u(c.heroImage || c.image))}" alt="" width="113" height="142" decoding="async">` : ''}

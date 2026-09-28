@@ -89,7 +89,15 @@
       "slug": "child",
       "title": "เด็กและพัฒนาการ",
       "desc": "พัฒนาการและการเคลื่อนไหวของเด็ก",
-      "image": "/assets/cat3d/child.webp"
+      "image": "/assets/cat3d/child.webp",
+      "heroTitle": "เติบโตอย่างเข้าใจ\nเรียนรู้ผ่านการเคลื่อนไหว",
+      "heroLine2Size": 16,
+      "heroText": "พัฒนาการและ\nการเคลื่อนไหวของเด็ก",
+      "heroImage": "/assets/hero/child.webp",
+      "mediaTitle": "สื่อการเรียนรู้",
+      "listTitle": "พัฒนาการและการเคลื่อนไหว",
+      "listSize": 19,
+      "searchHint": "ค้นหาหัวข้อพัฒนาการเด็ก"
     },
     {
       "slug": "women",

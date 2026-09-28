@@ -4,7 +4,7 @@ summary: กล้ามเนื้อเกร็งหรืออ่อน�
 type: disease
 category: child
 icon: child-cognition
-order: 2
+order: 8
 youtube: 
 related:
 reviewer: 
