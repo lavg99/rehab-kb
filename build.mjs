@@ -330,7 +330,6 @@ function diseaseBody(p, cat, crumb) {
   const video = id
     ? `<div class="media video"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0" title="วิดีโอ ${esc(p.title)}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
     : `<div class="media media-empty" role="img" aria-label="วิดีโอกำลังจัดทำ"><span class="me-play" aria-hidden="true">▶</span><span class="me-txt">วิดีโอสาธิตกำลังจัดทำ</span></div>`;
-  const rel = p.related.map(s => pages.find(x => x.slug === s)).filter(Boolean);
   return `<div class="topbar-tint">
   <header class="topbar">
     <a class="back-btn" href="${u(cat ? `/c/${cat.slug}.html` : '/')}" aria-label="ย้อนกลับ">‹</a>
@@ -357,18 +356,6 @@ function diseaseBody(p, cat, crumb) {
   ${video}
 
   <div class="prose dz-prose">${p.html}</div>
-
-  ${rel.length ? `<h3 class="dz-h">ท่าบริหารที่เกี่ยวข้อง</h3>
-  <ul class="cat-list">
-${rel.map(listCard).join('\n')}
-  </ul>` : ''}
-
-  ${feedbackHtml(p)}
-
-  <div class="btn-row">
-    <button type="button" class="btn" data-save="${esc(p.slug)}" data-save-text aria-pressed="false">บันทึกไว้อ่าน</button>
-    <a class="btn btn-primary" href="${u('/contact.html')}">สอบถามแผนก</a>
-  </div>
 
   ${refsHtml(p)}
 
@@ -434,20 +421,6 @@ ${p.steps.map(s => `    <li class="step">
   ${p.info.length ? `<div class="info">
 ${p.info.map(t => `    <p>${esc(t)}</p>`).join('\n')}
   </div>` : ''}
-
-  <section class="feedback" data-fb="${esc(p.slug)}" aria-labelledby="fb-h-${esc(p.slug)}">
-    <h3 class="fb-h" id="fb-h-${esc(p.slug)}">อ่านแล้วเข้าใจไหม</h3>
-    <p class="fb-sub">แตะ 1 ครั้ง ช่วยให้แผนกปรับปรุงเนื้อหา</p>
-    <div class="fb-row">
-${FB_SCALE.map(f => `      <button type="button" class="fb-btn" data-score="${f.v}" aria-label="${esc(f.label)}"><span class="fb-face" aria-hidden="true">${f.face}</span><span class="fb-lbl">${esc(f.label)}</span></button>`).join('\n')}
-    </div>
-    <p class="fb-thanks" hidden>ขอบคุณสำหรับความเห็น</p>
-  </section>
-
-  <div class="btn-row">
-    <button type="button" class="btn" data-save="${esc(p.slug)}" data-save-text aria-pressed="false">บันทึกไว้อ่าน</button>
-    <a class="btn btn-primary" href="${u('/contact.html')}">สอบถามแผนก</a>
-  </div>
 
   ${p.refs.length ? `<section class="refs">
     <h3 class="refs-h">แหล่งอ้างอิง</h3>
