@@ -325,6 +325,16 @@ const listCard = (p) => `    <li>
       </a>
     </li>`;
 
+// ท่าบริหารที่เกี่ยวข้อง แสดงเนื้อหาเต็มต่อท้ายบทความโรคเลย ไม่ต้องกดเข้าไปอีกหน้า
+const exercisesInline = (p) => p.related
+  .map(slug => pages.find(x => x.slug === slug))
+  .filter(x => x && x.html)
+  .map(x => `<section class="dz-ex" aria-labelledby="ex-${esc(x.slug)}">
+    <h2 class="dz-ex-h" id="ex-${esc(x.slug)}">${esc(x.title)}</h2>
+    <div class="prose dz-ex-body">${x.html.replace(/<(\/?)h2\b/g, '<$1h3')}</div>
+  </section>`)
+  .join('\n  ');
+
 function diseaseBody(p, cat, crumb) {
   const id = ytId(p.youtube);
   const video = id
@@ -356,6 +366,8 @@ function diseaseBody(p, cat, crumb) {
   ${video}
 
   <div class="prose dz-prose">${p.html}</div>
+
+  ${exercisesInline(p)}
 
   ${refsHtml(p)}
 
